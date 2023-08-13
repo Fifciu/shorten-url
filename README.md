@@ -37,8 +37,4 @@ Backlog:
 
 - [ ] URLs expire after 5 years (I still need to specify how will it look like, I mean - expiration process),
 - [ ] Counting views
-
-### TODO
-
-- add linter,
-- clicks counter,
+- [ ] add linter
