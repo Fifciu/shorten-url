@@ -4,12 +4,14 @@ Simple project created to play more with backend development including database'
 
 ## Functional requirements
 
-- user can sign up,
-- user can sign in,
-- user can shorten an URL,
-- user can shorten an URL with custom alias,
-- user can shorten an URL with custom expiry date, lower or equal 5 years,
-- URLs expire after 5 years (I still need to specify how will it look like, I mean - expiration process).
+- [x] user can sign up,
+- [x] user can sign in,
+- [x] user can shorten an URL,
+- [x] user can shorten an URL with custom alias,
+- [ ] user can shorten an URL with custom expiry date, lower or equal 5 years,
+- [ ] URLs expire after 5 years (I still need to specify how will it look like, I mean - expiration process),
+- [x] anyone can access shortened URL
+- [x] redirects to 404 if shortened URL doesn't exist
 
 ### TODO
 

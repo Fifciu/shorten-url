@@ -7,11 +7,12 @@ import { errorMiddleware } from './middlewares/error.middleware';
 
 export class App {
   public app: express.Application;
-  constructor(controllers: Controller[], public port: number) {
+  constructor(apiControllers: Controller[], viewControllers: Controller[], public port: number) {
     this.app = express();
 
     this.initializeMiddlewares();
-    this.initializeControllers(controllers);
+    this.initializeApiControllers(apiControllers);
+    this.initializeViewControllers(viewControllers);
     this.initializeErrorHandling();
     this.connectToDatabase();
   }
@@ -21,11 +22,23 @@ export class App {
     this.app.use(cookieParser());
   }
 
-  private initializeControllers (controllers: Controller[]) {
+  private initializeApiControllers (controllers: Controller[]) {
+    const router = express.Router();
     for (let controller of controllers) {
-      console.log(`Initializing controller ${controller.path}, ${controller.router}`);
+      console.log(`Initializing API controller ${controller.path}/*`);
+      router.use(controller.path, controller.router);
+    }
+    this.app.use('/api/v1', router);
+  }
+
+  private initializeViewControllers (controllers: Controller[]) {
+    for (let controller of controllers) {
+      console.log(`Initializing View controller ${controller.path}/*`);
       this.app.use(controller.path, controller.router);
     }
+    this.app.use('/page-not-found', (request, response) => {
+      response.status(404).send('Page not found');
+    });
   }
 
   private initializeErrorHandling () {

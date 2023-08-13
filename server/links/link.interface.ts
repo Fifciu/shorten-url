@@ -1,8 +1,8 @@
 export interface Link {
   _id: string;
   name: string;
-  shortenUrl: string;
+  alias: string;
   originalUrl: string;
   createdAt: Date;
-  expireAt: Date;
+  expiryAt: Date;
 };

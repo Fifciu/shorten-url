@@ -1,11 +1,9 @@
 import { CreateUserDto } from "./user.dto";
 import { userModel } from "./user.model";
-import { User } from './user.interface';
 import bcrypt from 'bcrypt';
-import mongoose from "mongoose";
 
 export class UserService {
-  private model = userModel;
+  private userModel = userModel;
 
   /**
    * Creates new user with hashed password.
@@ -14,7 +12,7 @@ export class UserService {
    */
   public async createWithHashedPassword(userData: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(userData.password, Number(process.env.BCRYPT_SALT_OR_ROUNDS!));
-    const user = await this.model.create({
+    const user = await this.userModel.create({
       ...userData,
       password: hashedPassword
     })
@@ -27,7 +25,7 @@ export class UserService {
    * @returns 
    */
   public async userWithEmailExists(email: string) {
-    const user = await this.model.findOne({ email });
+    const user = await this.userModel.findOne({ email });
     return Boolean(user);
   }
 
@@ -37,7 +35,7 @@ export class UserService {
    * @returns 
    */
   public async getUserByEmail(email: string) {
-    const user = await this.model.findOne({ email });
+    const user = await this.userModel.findOne({ email });
     return user;
   }
 }
