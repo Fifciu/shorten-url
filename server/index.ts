@@ -1,15 +1,12 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import { App } from './app';
+import 'dotenv/config';
+import { validateEnv } from './utils/validateEnv';
+import { AuthenticationController } from './authentication/authentication.controller';
 
-dotenv.config();
+validateEnv();
 
-const app = express();
 const port = process.env.PORT || 8080;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('elo');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+new App([
+  new AuthenticationController(),
+], +port).listen();
