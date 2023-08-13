@@ -16,9 +16,9 @@ class LinkService {
     return link;
   }
 
-  public expiryAtExceedsLimit(expireAt: Date, limit: number = 1000 * 60 * 60 * 24 * 365 * 5) {
+  public expiryAtExceedsLimit(expireAt: number, limit: number = 1000 * 60 * 60 * 24 * 365 * 5) {
     const now = Date.now();
-    return expireAt.getTime() - now > limit;
+    return expireAt - now > limit;
   }
 
   /**

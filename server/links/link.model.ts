@@ -6,7 +6,7 @@ const linkSchema = new mongoose.Schema({
   alias: String,
   originalUrl: String,
   createdAt: Date,
-  expiryAt: Date
+  expiryAt: Number
 });
 
 export const linkModel = mongoose.model<Link & mongoose.Document>('Link', linkSchema);

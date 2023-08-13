@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateLinkDto {
   @IsString()
@@ -10,6 +10,6 @@ export class CreateLinkDto {
   @IsString()
   public originalUrl: string;
 
-  @IsDate() @IsOptional()
-  public expiryAt: Date;
+  @IsNumber() @IsOptional()
+  public expiryAt: number;
 }
