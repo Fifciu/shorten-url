@@ -44,6 +44,16 @@ class LinkService {
     }
     return alias;
   }
+
+  public async linkExists(linkId: string) {
+    return await this.linkModel.exists({ _id: linkId });
+  }
+
+  public async deleteLink(linkId: string, userId: string) {
+    await this.linkModel.deleteOne({ _id: linkId });
+    const updatedUser = await this.userModel.findByIdAndUpdate(userId, { $pull: { links: linkId } });
+    return updatedUser;
+  }
 }
 
 export const linkService = new LinkService();

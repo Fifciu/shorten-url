@@ -7,6 +7,8 @@ import { ExpiryAtExceedsLimitException } from "../exceptions/ExpiryAtExceedsLimi
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validatePayload } from "../middlewares/validatePayload.middleware";
 import { LinkNotFoundException } from '../exceptions/LinkNotFoundException';
+import { NoPermissionsToTheLinkException } from "../exceptions/NoPermissionsToTheLinkException";
+import { IncorrectLinkIdException } from "../exceptions/IncorrectLinkIdException";
 
 export class LinkController implements Controller {
   public path = '/links';
@@ -18,10 +20,9 @@ export class LinkController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get('/alias/:alias/originalUrl', this.getOriginalUrlByAlias.bind(this));
     this.router.all('/*', authMiddleware)
       .post('/', validatePayload(CreateLinkDto), this.createLink.bind(this))
-    // this.router.delete('/:id', this.deleteLink.bind(this));
+      .delete('/:id', this.deleteLink.bind(this));
     // this.router.patch('/:id', this.patchLink.bind(this));
   }
 
@@ -44,15 +45,26 @@ export class LinkController implements Controller {
     }
   }
 
-  private async getOriginalUrlByAlias(request: Request, response: Response, next: NextFunction) {
-    const alias = request.params.alias;
-    const link = await this.linkService.getLinkByAlias(alias);
-    if (link) {
-      response.send({
-        orginalUrl: link.originalUrl
-      });
+  private async deleteLink(request: Request, response: Response, next: NextFunction) {
+    const linkId = request.params.id;
+    let linkExists = false;
+    try {
+      linkExists = Boolean(await this.linkService.linkExists(linkId));
+    } catch (err) {
+      console.log(err);
+      next(new IncorrectLinkIdException(linkId));
+      return;
+    }
+    if (!linkExists) {
+      next(new LinkNotFoundException(linkId));
     } else {
-      next(new LinkNotFoundException(alias));
+      if (!request.user?.links.some(link => link.toHexString() === linkId)) {
+        next(new NoPermissionsToTheLinkException(linkId));
+      } else {
+        const user = await this.linkService.deleteLink(linkId, request.user!._id);
+        request.user = user!;
+        response.sendStatus(204);
+      }
     }
   }
 }

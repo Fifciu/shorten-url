@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongoose';
 import { Link } from '../links/link.interface';
 
 export interface User {
@@ -7,3 +8,5 @@ export interface User {
   password: string;
   links: Link[]
 };
+
+export type UserDocument = Omit<User, 'links'> & { links: ObjectId[] };
