@@ -17,7 +17,7 @@ v0.0.1:
 v0.0.2:
 
 - [ ] user can show his links
-- [ ] user can remove his links
+- [x] user can remove his links
 - [ ] user can update his links
 
 v0.0.3:
