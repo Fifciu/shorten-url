@@ -8,6 +8,7 @@ v0.0.1:
 
 - [x] user can sign up,
 - [x] user can sign in,
+- [x] user can sign out,
 - [x] user can shorten an URL,
 - [x] user can shorten an URL with custom alias,
 - [x] user can shorten an URL with custom expiry date, lower or equal 5 years,
@@ -19,6 +20,10 @@ v0.0.2:
 - [ ] user can show his links
 - [x] user can remove his links
 - [ ] user can update his links
+- [ ] user can read his data (for now it's just name), somethine like GET /me endpoint
+- [ ] user can change password (my account)
+- [ ] user can change name (my account)
+- [ ] user can remind password (sending email with code)
 
 v0.0.3:
 
