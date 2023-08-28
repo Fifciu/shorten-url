@@ -1,6 +1,6 @@
 import { Controller } from "../interfaces/controller.interface";
 import express, { Request, Response, NextFunction } from 'express';
-import { CreateLinkDto } from "./link.dto";
+import { CreateLinkDto, UpdateLinkDto } from "./link.dto";
 import { linkService } from "./link.service";
 import { UrlWithThatAliasAlreadyExistsException } from "../exceptions/UrlWithThatAliasAlreadyExistsException";
 import { ExpiryAtExceedsLimitException } from "../exceptions/ExpiryAtExceedsLimitException";
@@ -22,8 +22,8 @@ export class LinkController implements Controller {
   private initializeRoutes() {
     this.router.all('/*', authMiddleware)
       .post('/', validatePayload(CreateLinkDto), this.createLink.bind(this))
-      .delete('/:id', this.deleteLink.bind(this));
-    // this.router.patch('/:id', this.patchLink.bind(this));
+      .delete('/:id', this.deleteLink.bind(this))
+      .patch('/:id', validatePayload(UpdateLinkDto), this.patchLink.bind(this));
   }
 
   private async createLink(request: Request, response: Response, next: NextFunction) {
@@ -51,7 +51,6 @@ export class LinkController implements Controller {
     try {
       linkExists = Boolean(await this.linkService.linkExists(linkId));
     } catch (err) {
-      console.log(err);
       next(new IncorrectLinkIdException(linkId));
       return;
     }
@@ -64,6 +63,28 @@ export class LinkController implements Controller {
         const user = await this.linkService.deleteLink(linkId, request.user!._id);
         request.user = user!;
         response.sendStatus(204);
+      }
+    }
+  }
+
+  private async patchLink(request: Request, response: Response, next: NextFunction) {
+    const linkId = request.params.id;
+    let linkExists = false;
+    try {
+      linkExists = Boolean(await this.linkService.linkExists(linkId));
+    } catch (err) {
+      next(new IncorrectLinkIdException(linkId));
+      return;
+    }
+    if (!linkExists) {
+      next(new LinkNotFoundException(linkId));
+    } else {
+      if (!request.user?.links.some(link => link.toHexString() === linkId)) {
+        next(new NoPermissionsToTheLinkException(linkId));
+      } else {
+        const updateLinkBody: UpdateLinkDto = request.body;
+        const updatedLink = await this.linkService.patchLink(linkId, updateLinkBody);
+        response.status(200).send(updatedLink);
       }
     }
   }

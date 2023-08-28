@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 
 export function validatePayload(type: any, skipMissingProperties = false) {
   return (req: Request, res: Response, next: NextFunction) => {
-    validate(plainToInstance(type, req.body), { skipMissingProperties })
+    validate(plainToInstance(type, req.body), { skipMissingProperties, whitelist: true, forbidNonWhitelisted: true })
       .then((errors: ValidationError[]) => {
         if (errors.length > 0) {
           const message = errors.map(

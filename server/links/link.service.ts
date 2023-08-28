@@ -1,5 +1,5 @@
 import { userModel } from '../users/user.model';
-import { CreateLinkDto } from './link.dto';
+import { CreateLinkDto, UpdateLinkDto } from './link.dto';
 import { linkModel } from './link.model';
 
 class LinkService {
@@ -53,6 +53,11 @@ class LinkService {
     await this.linkModel.deleteOne({ _id: linkId });
     const updatedUser = await this.userModel.findByIdAndUpdate(userId, { $pull: { links: linkId } });
     return updatedUser;
+  }
+
+  public async patchLink(linkId: string, updateLinkDto: UpdateLinkDto) {
+    const updatedLink = await this.linkModel.findByIdAndUpdate({ _id: linkId }, updateLinkDto, { new: true });
+    return updatedLink;
   }
 }
 
