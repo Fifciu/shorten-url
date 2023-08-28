@@ -19,11 +19,13 @@ v0.0.2:
 
 - [ ] user can show his links
 - [x] user can remove his links
-- [ ] user can update his links
+- [x] user can update his links
 - [ ] user can read his data (for now it's just name), somethine like GET /me endpoint
 - [ ] user can change password (my account)
 - [ ] user can change name (my account)
-- [ ] user can remind password (sending email with code)
+- [ ] user can reset password (sending email with code)
+- [ ] link has field updatedAt
+- [ ] user has field updatedAt
 
 v0.0.3:
 
