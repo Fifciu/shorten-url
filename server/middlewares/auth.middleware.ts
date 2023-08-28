@@ -14,6 +14,7 @@ export async function authMiddleware(request: Request, _: Response, next: NextFu
       const id = verificationResponse._id;
       const user = await userModel.findById(id);
       if (user) {
+        (user.password as any) = undefined;
         request.user = user;
         next();
       } else {

@@ -54,7 +54,7 @@ export class AuthenticationController implements Controller {
       next(new UserWithThatEmailAlreadyExistsException(userData.email));
     } else {
       const user = await this.userService.createWithHashedPassword(userData);
-      (user.password as any) = undefined; // TODO
+      (user.password as any) = undefined;
       const tokenData = this.createToken(user);
       response.setHeader('Set-Cookie', [
         this.createCookie(tokenData)
