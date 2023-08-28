@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongoose';
 import { userModel } from '../users/user.model';
 import { CreateLinkDto, UpdateLinkDto } from './link.dto';
 import { linkModel } from './link.model';
@@ -58,6 +59,11 @@ class LinkService {
   public async patchLink(linkId: string, updateLinkDto: UpdateLinkDto) {
     const updatedLink = await this.linkModel.findByIdAndUpdate({ _id: linkId }, updateLinkDto, { new: true });
     return updatedLink;
+  }
+
+  public async getLinksByIds(linkIds: ObjectId[]) {
+    const links = await this.linkModel.find({ _id: { '$in': linkIds } });
+    return links;
   }
 }
 
