@@ -4,7 +4,7 @@ Simple project created to play more with backend development including database'
 
 ## Functional requirements
 
-v0.0.1:
+v0.0.1 (ts):
 
 - [x] user can sign up,
 - [x] user can sign in,
@@ -17,10 +17,11 @@ v0.0.1:
 
 v0.0.2:
 
-- [ ] user can show his links
 - [x] user can remove his links
 - [x] user can update his links
 - [x] user can read his data (for now it's just name), somethine like GET /me endpoint
+- [ ] rewrite to Go
+- [ ] user can show his links
 - [ ] user can change password (my account)
 - [ ] user can change name (my account)
 - [ ] user can reset password (sending email with code)
