@@ -27,16 +27,33 @@ func Register(validate *validator.Validate, model UserModel) http.HandlerFunc {
 		err = validate.Struct(body)
 		if err != nil {
 			utils.JsonErrorResponse(w, http.StatusBadRequest, "Some fields are missing or have incorrect value")
+			return
 		}
 
 		// todo: check d.More()
 		hashedPassword, err := model.HashPassword(body.Password)
 		if err != nil {
 			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
 		}
 
-		user, err := model.CreateUser(body.Name, body.Email, hashedPassword)
-		user.Name = "asdsad"
+		user, err := model.CreateUser(body.Fullname, body.Email, hashedPassword)
+		if err != nil {
+			if err.Error() == http.StatusText(http.StatusInternalServerError) {
+				utils.JsonErrorResponse(w, http.StatusInternalServerError, err.Error())
+			} else {
+				// there might a better status code or even 200 to not expose user db
+				utils.JsonErrorResponse(w, http.StatusBadRequest, err.Error())
+			}
+			return
+		}
+
+		token, expirationTime, err := model.GenerateJwtToken(user)
+		if err != nil {
+			utils.JsonErrorResponse(w, http.StatusInternalServerError, err.Error())
+		}
+
+		utils.CookieResponse(w, token, expirationTime)
 	}
 }
 

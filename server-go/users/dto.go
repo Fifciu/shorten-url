@@ -1,7 +1,7 @@
 package users
 
 type UserCreateDto struct {
-	Name     string `json:"name" validate:"required"`
+	Fullname string `json:"fullname" validate:"required"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
 }
