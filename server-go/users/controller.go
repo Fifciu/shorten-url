@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Fifciu/shorten-url/server-go/utils"
+	utils "github.com/Fifciu/shorten-url/server-go/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
 	log "github.com/sirupsen/logrus"
