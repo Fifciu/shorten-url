@@ -1,11 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 
-	AuthModule "github.com/Fifciu/shorten-url/server-go/authentication"
+	_ "github.com/lib/pq"
+
+	users "github.com/Fifciu/shorten-url/server-go/users"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -16,10 +19,26 @@ type Module interface {
 	GetRouter() *chi.Mux
 }
 
+var db *sql.DB
+
+func init() {
+	var err error
+	connStr := "postgres://user:zaq1@WSX@localhost:5432/shortenurl?sslmode=disable"
+	db, err = sql.Open("postgres", connStr)
+	if err != nil {
+		panic(err)
+	}
+
+	if err = db.Ping(); err != nil {
+		panic(err)
+	}
+	fmt.Println("Connected to the DB")
+}
+
 func main() {
 	mainRouter := chi.NewRouter()
 	modules := []Module{
-		AuthModule.NewAuthModule(),
+		users.NewAuthModule(db),
 	}
 
 	for _, module := range modules {

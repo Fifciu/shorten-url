@@ -1,17 +1,23 @@
 package users
 
 import (
+	"database/sql"
+
 	"github.com/go-chi/chi/v5"
 )
 
-type AuthModule struct{}
+type AuthModule struct {
+	db *sql.DB
+}
 
 func (a *AuthModule) GetNamespace() string {
 	return "authentication"
 }
 
 func (a *AuthModule) GetRouter() *chi.Mux {
-	authController := NewAuthController(&MysqlUserModel{})
+	authController := NewAuthController(&PostgresUserModel{
+		db: a.db,
+	})
 	authRouter := chi.NewRouter()
 	for path, handler := range authController.Endpoints {
 		authRouter.HandleFunc(path, handler)
@@ -19,6 +25,6 @@ func (a *AuthModule) GetRouter() *chi.Mux {
 	return authRouter
 }
 
-func NewAuthModule() *AuthModule {
-	return &AuthModule{}
+func NewAuthModule(db *sql.DB) *AuthModule {
+	return &AuthModule{db}
 }
