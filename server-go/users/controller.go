@@ -152,7 +152,13 @@ func RefreshToken(validate *validator.Validate, model UserModel) http.HandlerFun
 	})
 }
 
-// func Logout()                                         {}
+func Logout(validate *validator.Validate, model UserModel) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		expirationTime := time.Date(1970, 1, 1, 0, 0, 0, 0, &time.Location{})
+		utils.CookieResponse(w, "", expirationTime)
+	})
+}
+
 // func Me()                                             {}
 
 func NewAuthController(model UserModel) *AuthController {
@@ -162,6 +168,7 @@ func NewAuthController(model UserModel) *AuthController {
 			"/register": Register(validate, model),
 			"/login":    Login(validate, model),
 			"/refresh":  RefreshToken(validate, model),
+			"/logout":   Logout(validate, model),
 		},
 	}
 }
