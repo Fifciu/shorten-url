@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Fifciu/shorten-url/server-go/utils"
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -99,7 +101,57 @@ func Login(validate *validator.Validate, model UserModel) http.HandlerFunc {
 	})
 }
 
-// func RefreshToken()                                   {}
+func RefreshToken(validate *validator.Validate, model UserModel) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookieKey := "session-token" // put it in one place
+		c, err := r.Cookie(cookieKey)
+		if err != nil {
+			if err == http.ErrNoCookie {
+				utils.JsonErrorResponse(w, http.StatusUnauthorized, "Authorization cookie not sent.")
+			} else {
+				utils.JsonErrorResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+			}
+			return
+		}
+		tokenFromCookie := c.Value
+		claims := &Claims{}
+		jwtKey := JWT_KEY
+		tkn, err := jwt.ParseWithClaims(tokenFromCookie, claims, func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtKey), nil
+		})
+
+		if err != nil {
+			if err == jwt.ErrSignatureInvalid {
+				log.Error("controller/authentication/RefreshToken/refreshing token: Invalid signature. Unauthorized")
+				utils.JsonErrorResponse(w, http.StatusUnauthorized, "Invalid signature. Unauthorized")
+			} else {
+				log.Error(fmt.Sprintf("controller/authentication/RefreshToken/refreshing token: %s", err.Error()))
+				utils.JsonErrorResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+			}
+			return
+		}
+
+		if !tkn.Valid {
+			utils.JsonErrorResponse(w, http.StatusUnauthorized, "Invalid token. Unauthorized")
+		}
+
+		if (*claims.ExpiresAt).Time.Sub(time.Now()) > 30*time.Second {
+			utils.JsonErrorResponse(w, http.StatusBadRequest, "It is too early to refresh the token")
+		}
+		expirationTime := time.Now().Add(time.Duration(JWT_TTL) * time.Second)
+		claims.ExpiresAt = jwt.NewNumericDate(expirationTime)
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		tokenString, err := token.SignedString([]byte(jwtKey))
+		if err != nil {
+			log.Error(fmt.Sprintf("controller/authentication/RefreshToken/refreshing token: %s", err.Error()))
+			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+
+		utils.CookieResponse(w, tokenString, expirationTime)
+	})
+}
+
 // func Logout()                                         {}
 // func Me()                                             {}
 
@@ -109,6 +161,7 @@ func NewAuthController(model UserModel) *AuthController {
 		Endpoints: map[string]http.HandlerFunc{
 			"/register": Register(validate, model),
 			"/login":    Login(validate, model),
+			"/refresh":  RefreshToken(validate, model),
 		},
 	}
 }
