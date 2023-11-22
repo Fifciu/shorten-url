@@ -4,23 +4,22 @@ Simple project created to play more with backend development including database'
 
 ## Functional requirements
 
-v0.0.1 (ts):
+v0.0.1 (go):
 
 - [x] user can sign up,
 - [x] user can sign in,
 - [x] user can sign out,
 - [x] user can shorten an URL,
 - [x] user can shorten an URL with custom alias,
-- [x] user can shorten an URL with custom expiry date, lower or equal 5 years,
 - [x] anyone can access shortened URL
-- [x] redirects to 404 if shortened URL doesn't exist
+- [ ] redirects to 404 if shortened URL doesn't exist
 
 v0.0.2:
 
-- [x] user can remove his links
-- [x] user can update his links
-- [x] user can read his data (for now it's just name), somethine like GET /me endpoint
-- [ ] rewrite to Go
+- [ ] user can remove his links
+- [ ] user can update his links
+- [ ] user can read his data (for now it's just name), somethine like GET /me endpoint
+- [IN PROGRESS] rewrite to Go
 - [ ] user can show his links
 - [ ] user can change password (my account)
 - [ ] user can change name (my account)

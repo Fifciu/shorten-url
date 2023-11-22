@@ -21,7 +21,7 @@ type Link struct {
 	UserId      uint      `json:"user_id" validate:"required"`
 	Name        string    `json:"name" validate:"required"`
 	OriginalUrl string    `json:"original_url" validate:"required"`
-	CreatedAt   time.Time `json:"name" validate:"required"`
+	CreatedAt   time.Time `json:"created_at" validate:"required"`
 	Alias       string    `json:"alias" validate:""` // TODO: add better validation
 }
 
@@ -29,17 +29,18 @@ type LinksModel interface {
 	CreateLink(c CreateLinkDto) (*Link, error)
 	BuildAlias(finalLen int) (string, error)
 	AliasExists(alias string) (bool, error)
+	FindLinkByAlias(alias string) (*Link, error)
 }
 
 type PostgresLinkModel struct {
-	db *sql.DB // todo: put here db handler
+	Db *sql.DB // todo: put here db handler
 }
 
 // TODO: Write tests
 
 func (p *PostgresLinkModel) CreateLink(c CreateLinkDto) (*Link, error) {
 	var lastInsertedId uint
-	err := p.db.QueryRow("INSERT INTO links (user_id, name, original_url, created_at, alias) VALUES ($1, $2, $3, $4, $5) RETURNING id", c.UserId, c.Name, c.OriginalUrl, c.CreatedAt, c.Alias).Scan(&lastInsertedId)
+	err := p.Db.QueryRow("INSERT INTO links (user_id, name, original_url, created_at, alias) VALUES ($1, $2, $3, $4, $5) RETURNING id", c.UserId, c.Name, c.OriginalUrl, c.CreatedAt, c.Alias).Scan(&lastInsertedId)
 	if err != nil {
 		if e := pgerror.UniqueViolation(err); e != nil {
 			return nil, errors.New(http.StatusText(http.StatusConflict)) // email exists
@@ -79,9 +80,21 @@ func (p *PostgresLinkModel) BuildAlias(finalLen int) (string, error) {
 
 func (p *PostgresLinkModel) AliasExists(alias string) (bool, error) {
 	var exists bool
-	err := p.db.QueryRow("SELECT EXISTS(SELECT 1 FROM links WHERE alias = $1) as exists", alias).Scan(&exists)
+	err := p.Db.QueryRow("SELECT EXISTS(SELECT 1 FROM links WHERE alias = $1) as exists", alias).Scan(&exists)
 	if err != nil {
 		return false, err
 	}
 	return exists, nil
+}
+
+func (p *PostgresLinkModel) FindLinkByAlias(alias string) (*Link, error) {
+	var link Link
+	err := p.Db.QueryRow("SELECT id, user_id, name, original_url, created_at, alias FROM links WHERE alias = $1", alias).Scan(&link.ID, &link.UserId, &link.Name, &link.OriginalUrl, &link.CreatedAt, &link.Alias)
+	if err != nil {
+		if e := pgerror.NoDataFound(err); e != nil {
+			return nil, errors.New(http.StatusText(http.StatusNotFound))
+		}
+		return nil, err
+	}
+	return &link, nil
 }

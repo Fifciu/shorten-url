@@ -9,6 +9,7 @@ import (
 	_ "github.com/lib/pq"
 
 	links "github.com/Fifciu/shorten-url/server-go/links"
+	redirects "github.com/Fifciu/shorten-url/server-go/redirects"
 	users "github.com/Fifciu/shorten-url/server-go/users"
 	"github.com/go-chi/chi/v5"
 )
@@ -41,6 +42,7 @@ func main() {
 	modules := []Module{
 		users.NewAuthModule(db),
 		links.NewLinksModule(db),
+		redirects.NewRedirectsModule(db),
 	}
 
 	for _, module := range modules {

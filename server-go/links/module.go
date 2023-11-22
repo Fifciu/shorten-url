@@ -17,7 +17,7 @@ func (a *LinksModule) GetNamespace() string {
 
 func (a *LinksModule) GetRouter() *chi.Mux {
 	linksController := NewLinksController(&PostgresLinkModel{
-		db: a.db,
+		Db: a.db,
 	})
 	linkRouter := chi.NewRouter()
 	for _, endpoint := range linksController {
