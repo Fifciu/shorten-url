@@ -116,9 +116,32 @@ func DeleteMyLink(validate *validator.Validate, model LinksModel) http.HandlerFu
 	})
 }
 
+func GetMyLinks(validate *validator.Validate, model LinksModel) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		values := r.Context().Value("claims").(*users.Claims)
+		userId := values.UserClaims.ID
+
+		links, err := model.GetLinksOfUser(userId)
+		if err != nil {
+			log.Error(fmt.Sprintf("controller/links/GetMyLinks/fetching user's links: %s", err.Error()))
+			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+
+		utils.JsonResponse(w, 200, links)
+	})
+}
+
+// Actualy it's about MY Links
 func NewLinksController(model LinksModel) []*LinksHandler {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	return []*LinksHandler{
+		{
+			Path:        "/",
+			Method:      "GET",
+			Middlewares: []func(http.Handler) http.Handler{middlewares.Authenticated},
+			Handler:     GetMyLinks(validate, model),
+		},
 		{
 			Path:        "/",
 			Method:      "POST",

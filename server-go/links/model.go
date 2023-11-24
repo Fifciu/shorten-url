@@ -32,6 +32,7 @@ type LinksModel interface {
 	FindLinkByAlias(alias string) (*Link, error)
 	IsLinkOwner(userId uint, linkId uint) (bool, error)
 	DeleteLink(linkId uint) error
+	GetLinksOfUser(userId uint) ([]*Link, error)
 }
 
 type PostgresLinkModel struct {
@@ -127,4 +128,24 @@ func (p *PostgresLinkModel) DeleteLink(linkId uint) error {
 		return errors.New(http.StatusText(http.StatusNotFound))
 	}
 	return nil
+}
+
+func (p *PostgresLinkModel) GetLinksOfUser(userId uint) ([]*Link, error) {
+	rows, err := p.Db.Query("SELECT id, name, original_url, created_at, alias FROM links WHERE user_id = $1", userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	links := make([]*Link, 0) // TODO: Can I extract rows amount from query?
+	for rows.Next() {
+		link := &Link{}
+		if err := rows.Scan(&link.ID, &link.Name, &link.OriginalUrl, &link.CreatedAt, &link.Alias); err != nil {
+			return nil, err
+		}
+		links = append(links, link)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return links, nil
 }
