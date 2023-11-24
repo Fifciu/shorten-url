@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Fifciu/shorten-url/server-go/middlewares"
 	"github.com/Fifciu/shorten-url/server-go/users"
 	"github.com/Fifciu/shorten-url/server-go/utils"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	log "github.com/sirupsen/logrus"
 )
@@ -74,6 +76,46 @@ func AddNewLink(validate *validator.Validate, model LinksModel) http.HandlerFunc
 	})
 }
 
+func DeleteMyLink(validate *validator.Validate, model LinksModel) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		linkIdString := chi.URLParam(r, "linkId")
+		intLinkId, err := strconv.Atoi(linkIdString)
+		if err != nil {
+			log.Error(fmt.Sprintf("controller/links/DeleteMyLink/reading link id: %s", err.Error()))
+			utils.JsonErrorResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+			return
+		}
+		linkId := uint(intLinkId)
+		values := r.Context().Value("claims").(*users.Claims)
+		userId := values.UserClaims.ID
+
+		isOwner, err := model.IsLinkOwner(userId, linkId)
+		if err != nil {
+			log.Error(fmt.Sprintf("controller/links/DeleteMyLink/checking is link owner: %s", err.Error()))
+			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+		if !isOwner {
+			log.Error(fmt.Sprintf("controller/links/DeleteMyLink/checking ownerity. UserId %d is not an owner of Link with Id %d", userId, linkId))
+			utils.JsonErrorResponse(w, http.StatusForbidden, http.StatusText(http.StatusForbidden))
+			return
+		}
+
+		err = model.DeleteLink(linkId)
+
+		if err != nil {
+			if err.Error() == http.StatusText(http.StatusNotFound) {
+				utils.JsonErrorResponse(w, http.StatusNotFound, http.StatusText(http.StatusNotFound))
+			} else {
+				log.Error(fmt.Sprintf("controller/links/DeleteMyLink/deleting link: %s", err.Error()))
+				utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			}
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	})
+}
+
 func NewLinksController(model LinksModel) []*LinksHandler {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	return []*LinksHandler{
@@ -82,6 +124,12 @@ func NewLinksController(model LinksModel) []*LinksHandler {
 			Method:      "POST",
 			Middlewares: []func(http.Handler) http.Handler{middlewares.Authenticated},
 			Handler:     AddNewLink(validate, model),
+		},
+		{
+			Path:        "/{linkId}", // TODO: Validate it's number
+			Method:      "DELETE",
+			Middlewares: []func(http.Handler) http.Handler{middlewares.Authenticated},
+			Handler:     DeleteMyLink(validate, model),
 		},
 	}
 }

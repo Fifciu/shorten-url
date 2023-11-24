@@ -16,7 +16,7 @@ v0.0.1 (go):
 
 v0.0.2:
 
-- [ ] user can remove his links
+- [x] user can remove his links
 - [ ] user can update his links
 - [ ] user can read his data (for now it's just name), somethine like GET /me endpoint
 - [IN PROGRESS] rewrite to Go

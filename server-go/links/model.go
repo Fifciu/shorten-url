@@ -30,6 +30,8 @@ type LinksModel interface {
 	BuildAlias(finalLen int) (string, error)
 	AliasExists(alias string) (bool, error)
 	FindLinkByAlias(alias string) (*Link, error)
+	IsLinkOwner(userId uint, linkId uint) (bool, error)
+	DeleteLink(linkId uint) error
 }
 
 type PostgresLinkModel struct {
@@ -97,4 +99,32 @@ func (p *PostgresLinkModel) FindLinkByAlias(alias string) (*Link, error) {
 		return nil, err
 	}
 	return &link, nil
+}
+
+func (p *PostgresLinkModel) IsLinkOwner(userId uint, linkId uint) (bool, error) {
+	var exists bool // TODO: Can I safely remove exists? Or .Scan assign err?
+	err := p.Db.QueryRow("SELECT EXISTS(SELECT 1 FROM links WHERE user_id = $1 AND id = $2)", userId, linkId).Scan(&exists)
+	if err != nil {
+		if e := pgerror.NoDataFound(err); e != nil {
+			return false, nil
+		}
+		return false, err
+	}
+	// TODO: Simplify
+	return exists, nil
+}
+
+func (p *PostgresLinkModel) DeleteLink(linkId uint) error {
+	res, err := p.Db.Exec("DELETE FROM links WHERE id = $1", linkId)
+	if err != nil {
+		return err
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if count < 1 {
+		return errors.New(http.StatusText(http.StatusNotFound))
+	}
+	return nil
 }
