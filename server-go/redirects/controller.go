@@ -15,6 +15,10 @@ type RedirectsController struct {
 	Endpoints map[string]http.HandlerFunc
 }
 
+const (
+	frontendNotFoundUrl = "/page-not-found"
+)
+
 func Redirect(validate *validator.Validate, model links.LinksModel) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		alias := chi.URLParam(r, "alias")
@@ -25,8 +29,8 @@ func Redirect(validate *validator.Validate, model links.LinksModel) http.Handler
 				log.Error(fmt.Sprintf("controller/redirects/Redirect/fetching link: %s", err.Error()))
 				utils.JsonErrorResponse(w, http.StatusInternalServerError, err.Error())
 			} else {
-				log.Error(fmt.Sprintf("controller/redirects/Redirect/fetching link: %s", "Couldn't find alias"))
-				utils.JsonErrorResponse(w, http.StatusNotFound, err.Error())
+				log.Error(fmt.Sprintf("controller/redirects/Redirect/fetching link: %s %q", "Couldn't find alias", alias))
+				http.Redirect(w, r, frontendNotFoundUrl, http.StatusMovedPermanently)
 			}
 			return
 		}

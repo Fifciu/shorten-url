@@ -12,7 +12,7 @@ v0.0.1 (go):
 - [x] user can shorten an URL,
 - [x] user can shorten an URL with custom alias,
 - [x] anyone can access shortened URL
-- [ ] redirects to 404 if shortened URL doesn't exist
+- [x] redirects to 404 if shortened URL doesn't exist
 
 v0.0.2:
 
