@@ -17,14 +17,15 @@ const (
 )
 
 type User struct {
-	ID       uint   `json:"id"`
-	Fullname string `json:"fullname"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	ID        uint      `json:"id"`
+	Fullname  string    `json:"fullname"`
+	Email     string    `json:"email"`
+	Password  string    `json:"password"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type UserModel interface {
-	CreateUser(name, email, password string) (*User, error)
+	CreateUser(c UserCreateDto) (*User, error)
 	HashPassword(password string) (string, error)
 	GenerateJwtToken(user *User) (string, time.Time, error) // TODO: Reffactor to GenereateJWT
 	GetUserByEmail(email string) (*User, error)
@@ -47,9 +48,9 @@ type PostgresUserModel struct {
 
 // TODO: Write tests
 
-func (p *PostgresUserModel) CreateUser(fullname, email, password string) (*User, error) {
+func (p *PostgresUserModel) CreateUser(c UserCreateDto) (*User, error) {
 	var lastInsertedId uint
-	err := p.db.QueryRow("INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING id", fullname, email, password).Scan(&lastInsertedId)
+	err := p.db.QueryRow("INSERT INTO users (fullname, email, password, updated_at) VALUES ($1, $2, $3, $4) RETURNING id", c.Fullname, c.Email, c.Password, c.UpdatedAt).Scan(&lastInsertedId)
 	if err != nil {
 		if e := pgerror.UniqueViolation(err); e != nil {
 			return nil, errors.New(http.StatusText(http.StatusConflict)) // email exists
@@ -58,10 +59,11 @@ func (p *PostgresUserModel) CreateUser(fullname, email, password string) (*User,
 	}
 
 	return &User{
-		ID:       lastInsertedId,
-		Fullname: fullname,
-		Email:    email,
-		Password: password,
+		ID:        lastInsertedId,
+		Fullname:  c.Fullname,
+		Email:     c.Email,
+		Password:  c.Password,
+		UpdatedAt: c.UpdatedAt,
 	}, nil
 }
 

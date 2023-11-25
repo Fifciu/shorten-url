@@ -43,7 +43,9 @@ func Register(validate *validator.Validate, model UserModel) http.HandlerFunc {
 			return
 		}
 
-		user, err := model.CreateUser(body.Fullname, body.Email, hashedPassword)
+		body.Password = hashedPassword
+		body.UpdatedAt = time.Now()
+		user, err := model.CreateUser(body)
 		if err != nil {
 			log.Error(fmt.Sprintf("controller/authentication/Register/creating user: %s", err.Error()))
 			utils.JsonErrorResponse(w, http.StatusInternalServerError, err.Error())
