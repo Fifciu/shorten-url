@@ -33,6 +33,7 @@ type LinksModel interface {
 	IsLinkOwner(userId uint, linkId uint) (bool, error)
 	DeleteLink(linkId uint) error
 	GetLinksOfUser(userId uint) ([]*Link, error)
+	UserUsedLinkName(linkName string, userId uint) (bool, error)
 }
 
 type PostgresLinkModel struct {
@@ -84,6 +85,15 @@ func (p *PostgresLinkModel) BuildAlias(finalLen int) (string, error) {
 func (p *PostgresLinkModel) AliasExists(alias string) (bool, error) {
 	var exists bool
 	err := p.Db.QueryRow("SELECT EXISTS(SELECT 1 FROM links WHERE alias = $1) as exists", alias).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
+}
+
+func (p *PostgresLinkModel) UserUsedLinkName(linkName string, userId uint) (bool, error) {
+	var exists bool
+	err := p.Db.QueryRow("SELECT EXISTS(SELECT 1 FROM links WHERE name = $1 AND user_id = $2) as exists", linkName, userId).Scan(&exists)
 	if err != nil {
 		return false, err
 	}

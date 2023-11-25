@@ -43,6 +43,17 @@ func AddNewLink(validate *validator.Validate, model LinksModel) http.HandlerFunc
 
 		values := r.Context().Value("claims").(*users.Claims)
 		body.UserId = values.UserClaims.ID
+		userUsedLinkName, err := model.UserUsedLinkName(body.Name, body.UserId)
+		if err != nil {
+			log.Error(fmt.Sprintf("controller/links/AddNewLink/failed checking name for user: %s", err.Error()))
+			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+		if userUsedLinkName {
+			log.Error(fmt.Sprintf("controller/links/AddNewLink/user already used this name: %s", body.Name))
+			utils.JsonErrorResponse(w, http.StatusConflict, http.StatusText(http.StatusConflict)) // TODO: Better error message
+			return
+		}
 		body.CreatedAt = time.Now()
 		// TODO: Add min length
 		if body.Alias == "" {

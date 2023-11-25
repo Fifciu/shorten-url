@@ -17,6 +17,7 @@ v0.0.1 (go):
 v0.0.2:
 
 - [x] user can remove his links
+- [x] user can't add two links with the same name
 - [ ] user can update his links
 - [IN PROGRESS] rewrite to Go
 - [x] user can show his links
