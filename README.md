@@ -18,7 +18,6 @@ v0.0.2:
 
 - [x] user can remove his links
 - [ ] user can update his links
-- [ ] user can read his data (for now it's just name), somethine like GET /me endpoint
 - [IN PROGRESS] rewrite to Go
 - [x] user can show his links
 - [ ] user can change password (my account)
