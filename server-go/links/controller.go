@@ -54,7 +54,7 @@ func AddNewLink(validate *validator.Validate, model LinksModel) http.HandlerFunc
 			utils.JsonErrorResponse(w, http.StatusConflict, http.StatusText(http.StatusConflict)) // TODO: Better error message
 			return
 		}
-		body.CreatedAt = time.Now()
+		body.UpdatedAt = time.Now()
 		// TODO: Add min length
 		if body.Alias == "" {
 			body.Alias, err = model.BuildAlias(10)

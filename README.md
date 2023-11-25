@@ -24,7 +24,7 @@ v0.0.2:
 - [ ] user can change password (my account)
 - [ ] user can change name (my account)
 - [ ] user can reset password (sending email with code)
-- [ ] link has field updatedAt (maybe instead of createdAt)
+- [x] link has field updatedAt
 - [ ] user has field updatedAt
 
 v0.0.3:

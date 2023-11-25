@@ -23,7 +23,7 @@ type Link struct {
 	UserId      uint      `json:"user_id" validate:"required"`
 	Name        string    `json:"name" validate:"required"`
 	OriginalUrl string    `json:"original_url" validate:"required"`
-	CreatedAt   time.Time `json:"created_at" validate:"required"`
+	UpdatedAt   time.Time `json:"updated_at" validate:"required"`
 	Alias       string    `json:"alias" validate:""` // TODO: add better validation
 }
 
@@ -47,7 +47,7 @@ type PostgresLinkModel struct {
 
 func (p *PostgresLinkModel) CreateLink(c CreateLinkDto) (*Link, error) {
 	var lastInsertedId uint
-	err := p.Db.QueryRow("INSERT INTO links (user_id, name, original_url, created_at, alias) VALUES ($1, $2, $3, $4, $5) RETURNING id", c.UserId, c.Name, c.OriginalUrl, c.CreatedAt, c.Alias).Scan(&lastInsertedId)
+	err := p.Db.QueryRow("INSERT INTO links (user_id, name, original_url, updated_at, alias) VALUES ($1, $2, $3, $4, $5) RETURNING id", c.UserId, c.Name, c.OriginalUrl, c.UpdatedAt, c.Alias).Scan(&lastInsertedId)
 	if err != nil {
 		if e := pgerror.UniqueViolation(err); e != nil {
 			return nil, errors.New(http.StatusText(http.StatusConflict)) // email exists
@@ -60,7 +60,7 @@ func (p *PostgresLinkModel) CreateLink(c CreateLinkDto) (*Link, error) {
 		UserId:      c.UserId,
 		Name:        c.Name,
 		OriginalUrl: c.OriginalUrl,
-		CreatedAt:   c.CreatedAt,
+		UpdatedAt:   c.UpdatedAt,
 		Alias:       c.Alias,
 	}, nil
 }
@@ -105,7 +105,7 @@ func (p *PostgresLinkModel) UserUsedLinkName(linkName string, userId uint) (bool
 
 func (p *PostgresLinkModel) FindLinkByAlias(alias string) (*Link, error) {
 	var link Link
-	err := p.Db.QueryRow("SELECT id, user_id, name, original_url, created_at, alias FROM links WHERE alias = $1", alias).Scan(&link.ID, &link.UserId, &link.Name, &link.OriginalUrl, &link.CreatedAt, &link.Alias)
+	err := p.Db.QueryRow("SELECT id, user_id, name, original_url, updated_at, alias FROM links WHERE alias = $1", alias).Scan(&link.ID, &link.UserId, &link.Name, &link.OriginalUrl, &link.UpdatedAt, &link.Alias)
 	if err != nil {
 		if e := pgerror.NoDataFound(err); e != nil {
 			return nil, errors.New(http.StatusText(http.StatusNotFound))
@@ -144,7 +144,7 @@ func (p *PostgresLinkModel) DeleteLink(linkId uint) error {
 }
 
 func (p *PostgresLinkModel) GetLinksOfUser(userId uint) ([]*Link, error) {
-	rows, err := p.Db.Query("SELECT id, name, original_url, created_at, alias FROM links WHERE user_id = $1", userId)
+	rows, err := p.Db.Query("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1", userId)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (p *PostgresLinkModel) GetLinksOfUser(userId uint) ([]*Link, error) {
 	links := make([]*Link, 0) // TODO: Can I extract rows amount from query?
 	for rows.Next() {
 		link := &Link{}
-		if err := rows.Scan(&link.ID, &link.Name, &link.OriginalUrl, &link.CreatedAt, &link.Alias); err != nil {
+		if err := rows.Scan(&link.ID, &link.Name, &link.OriginalUrl, &link.UpdatedAt, &link.Alias); err != nil {
 			return nil, err
 		}
 		links = append(links, link)
@@ -169,6 +169,8 @@ func (p *PostgresLinkModel) UpdateLink(linkId, userId uint, body UpdateLinkDto) 
 	q := `UPDATE links SET `
 	qParts := make([]string, 0, 2)
 	args := make([]interface{}, 0, 2)
+
+	// TODO: what if there are no fields?
 
 	if body.Name != nil {
 		qParts = append(qParts, fmt.Sprintf(`name = $%d`, argCounter))
@@ -187,6 +189,10 @@ func (p *PostgresLinkModel) UpdateLink(linkId, userId uint, body UpdateLinkDto) 
 		args = append(args, body.Alias)
 		argCounter++
 	}
+
+	qParts = append(qParts, fmt.Sprintf(`updated_at = $%d`, argCounter))
+	args = append(args, time.Now())
+	argCounter++
 
 	q += strings.Join(qParts, ",") + fmt.Sprintf(` WHERE id = $%d `, argCounter)
 	argCounter++
@@ -208,7 +214,7 @@ func (p *PostgresLinkModel) UpdateLink(linkId, userId uint, body UpdateLinkDto) 
 
 	// Fetching link
 	var link Link
-	err = p.Db.QueryRow("SELECT id, user_id, name, original_url, created_at, alias FROM links WHERE id = $1", linkId).Scan(&link.ID, &link.UserId, &link.Name, &link.OriginalUrl, &link.CreatedAt, &link.Alias)
+	err = p.Db.QueryRow("SELECT id, user_id, name, original_url, updated_at, alias FROM links WHERE id = $1", linkId).Scan(&link.ID, &link.UserId, &link.Name, &link.OriginalUrl, &link.UpdatedAt, &link.Alias)
 	if err != nil {
 		if e := pgerror.NoDataFound(err); e != nil {
 			return nil, errors.New(http.StatusText(http.StatusNotFound))
