@@ -3,9 +3,11 @@ package links
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"math"
 	"math/rand"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/omeid/pgerror"
@@ -34,6 +36,7 @@ type LinksModel interface {
 	DeleteLink(linkId uint) error
 	GetLinksOfUser(userId uint) ([]*Link, error)
 	UserUsedLinkName(linkName string, userId uint) (bool, error)
+	UpdateLink(linkId, userId uint, body UpdateLinkDto) (*Link, error)
 }
 
 type PostgresLinkModel struct {
@@ -158,4 +161,59 @@ func (p *PostgresLinkModel) GetLinksOfUser(userId uint) ([]*Link, error) {
 		return nil, err
 	}
 	return links, nil
+}
+
+func (p *PostgresLinkModel) UpdateLink(linkId, userId uint, body UpdateLinkDto) (*Link, error) {
+	// Updating
+	argCounter := 1
+	q := `UPDATE links SET `
+	qParts := make([]string, 0, 2)
+	args := make([]interface{}, 0, 2)
+
+	if body.Name != nil {
+		qParts = append(qParts, fmt.Sprintf(`name = $%d`, argCounter))
+		args = append(args, body.Name)
+		argCounter++
+	}
+
+	if body.OriginalUrl != nil {
+		qParts = append(qParts, fmt.Sprintf(`original_url = $%d`, argCounter))
+		args = append(args, body.OriginalUrl)
+		argCounter++
+	}
+
+	if body.Alias != nil {
+		qParts = append(qParts, fmt.Sprintf(`alias = $%d`, argCounter))
+		args = append(args, body.Alias)
+		argCounter++
+	}
+
+	q += strings.Join(qParts, ",") + fmt.Sprintf(` WHERE id = $%d `, argCounter)
+	argCounter++
+	q += fmt.Sprintf(`AND user_id = $%d`, argCounter)
+	args = append(args, linkId)
+	args = append(args, userId)
+
+	res, err := p.Db.Exec(q, args...)
+	if err != nil {
+		return nil, err
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if count < 1 {
+		return nil, errors.New("You are not an owner of specified link")
+	}
+
+	// Fetching link
+	var link Link
+	err = p.Db.QueryRow("SELECT id, user_id, name, original_url, created_at, alias FROM links WHERE id = $1", linkId).Scan(&link.ID, &link.UserId, &link.Name, &link.OriginalUrl, &link.CreatedAt, &link.Alias)
+	if err != nil {
+		if e := pgerror.NoDataFound(err); e != nil {
+			return nil, errors.New(http.StatusText(http.StatusNotFound))
+		}
+		return nil, err
+	}
+	return &link, nil
 }

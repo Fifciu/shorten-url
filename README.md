@@ -18,13 +18,13 @@ v0.0.2:
 
 - [x] user can remove his links
 - [x] user can't add two links with the same name
-- [ ] user can update his links
+- [x] user can update his links
 - [IN PROGRESS] rewrite to Go
 - [x] user can show his links
 - [ ] user can change password (my account)
 - [ ] user can change name (my account)
 - [ ] user can reset password (sending email with code)
-- [ ] link has field updatedAt
+- [ ] link has field updatedAt (maybe instead of createdAt)
 - [ ] user has field updatedAt
 
 v0.0.3:
