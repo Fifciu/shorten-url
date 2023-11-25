@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Fifciu/shorten-url/server-go/users"
+	"github.com/Fifciu/shorten-url/server-go/authentication"
 	"github.com/Fifciu/shorten-url/server-go/utils"
 	"github.com/golang-jwt/jwt/v5"
 	log "github.com/sirupsen/logrus"
@@ -24,8 +24,8 @@ func Authenticated(next http.Handler) http.Handler {
 			return
 		}
 		tokenFromCookie := c.Value
-		claims := &users.Claims{}
-		jwtKey := users.JWT_KEY
+		claims := &authentication.Claims{}
+		jwtKey := authentication.JWT_KEY
 		tkn, err := jwt.ParseWithClaims(tokenFromCookie, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(jwtKey), nil
 		})

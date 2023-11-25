@@ -8,6 +8,7 @@ import (
 
 	_ "github.com/lib/pq"
 
+	authentication "github.com/Fifciu/shorten-url/server-go/authentication"
 	links "github.com/Fifciu/shorten-url/server-go/links"
 	redirects "github.com/Fifciu/shorten-url/server-go/redirects"
 	users "github.com/Fifciu/shorten-url/server-go/users"
@@ -40,7 +41,8 @@ func init() {
 func main() {
 	mainRouter := chi.NewRouter()
 	modules := []Module{
-		users.NewAuthModule(db),
+		authentication.NewAuthModule(db),
+		users.NewUsersModule(db),
 		links.NewLinksModule(db),
 		redirects.NewRedirectsModule(db),
 	}

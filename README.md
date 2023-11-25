@@ -21,13 +21,17 @@ v0.0.2:
 - [x] user can update his links
 - [IN PROGRESS] rewrite to Go
 - [x] user can show his links
-- [ ] user can change password (my account)
+- [x] user can change password (my account)
 - [ ] user can change name (my account)
 - [ ] user can reset password (sending email with code)
 - [x] link has field updatedAt
 - [x] user has field updatedAt
 
 v0.0.3:
+
+- [ ] refactor (tidy auth/user controllers)
+
+v0.0.4:
 
 - [ ] create client project
 - [ ] sign up

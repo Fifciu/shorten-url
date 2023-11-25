@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Fifciu/shorten-url/server-go/authentication"
 	"github.com/Fifciu/shorten-url/server-go/middlewares"
-	"github.com/Fifciu/shorten-url/server-go/users"
 	"github.com/Fifciu/shorten-url/server-go/utils"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
@@ -41,7 +41,7 @@ func AddNewLink(validate *validator.Validate, model LinksModel) http.HandlerFunc
 			return
 		}
 
-		values := r.Context().Value("claims").(*users.Claims)
+		values := r.Context().Value("claims").(*authentication.Claims)
 		body.UserId = values.UserClaims.ID
 		userUsedLinkName, err := model.UserUsedLinkName(body.Name, body.UserId)
 		if err != nil {
@@ -97,7 +97,7 @@ func DeleteMyLink(validate *validator.Validate, model LinksModel) http.HandlerFu
 			return
 		}
 		linkId := uint(intLinkId)
-		values := r.Context().Value("claims").(*users.Claims)
+		values := r.Context().Value("claims").(*authentication.Claims)
 		userId := values.UserClaims.ID
 
 		isOwner, err := model.IsLinkOwner(userId, linkId)
@@ -129,7 +129,7 @@ func DeleteMyLink(validate *validator.Validate, model LinksModel) http.HandlerFu
 
 func GetMyLinks(validate *validator.Validate, model LinksModel) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		values := r.Context().Value("claims").(*users.Claims)
+		values := r.Context().Value("claims").(*authentication.Claims)
 		userId := values.UserClaims.ID
 
 		links, err := model.GetLinksOfUser(userId)
@@ -153,7 +153,7 @@ func PatchMyLink(validate *validator.Validate, model LinksModel) http.HandlerFun
 			return
 		}
 		linkId := uint(intLinkId)
-		values := r.Context().Value("claims").(*users.Claims)
+		values := r.Context().Value("claims").(*authentication.Claims)
 		userId := values.UserClaims.ID
 
 		isOwner, err := model.IsLinkOwner(userId, linkId)
