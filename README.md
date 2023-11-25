@@ -20,7 +20,7 @@ v0.0.2:
 - [ ] user can update his links
 - [ ] user can read his data (for now it's just name), somethine like GET /me endpoint
 - [IN PROGRESS] rewrite to Go
-- [ ] user can show his links
+- [x] user can show his links
 - [ ] user can change password (my account)
 - [ ] user can change name (my account)
 - [ ] user can reset password (sending email with code)
