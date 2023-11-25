@@ -19,17 +19,22 @@ v0.0.2:
 - [x] user can remove his links
 - [x] user can't add two links with the same name
 - [x] user can update his links
-- [IN PROGRESS] rewrite to Go
+- [x] rewrite to Go
 - [x] user can show his links
 - [x] user can change password (my account)
-- [ ] user can change name (my account)
-- [ ] user can reset password (sending email with code)
+- [x] user can change name (my account)
 - [x] link has field updatedAt
 - [x] user has field updatedAt
 
 v0.0.3:
 
 - [ ] refactor (tidy auth/user controllers)
+- [ ] fix controller tests
+
+v0.0.4:
+
+- [ ] create TS Client
+- [ ] write e2e tests in ts client
 
 v0.0.4:
 
