@@ -70,6 +70,7 @@ func PatchPassword(validate *validator.Validate, model UsersModel) http.HandlerF
 			return
 		}
 
+		// No cookie renewal, as password is not part of jwt claims
 		w.WriteHeader(200)
 	})
 }

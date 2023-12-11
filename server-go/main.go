@@ -13,6 +13,7 @@ import (
 	redirects "github.com/Fifciu/shorten-url/server-go/redirects"
 	users "github.com/Fifciu/shorten-url/server-go/users"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 )
 
 const PORT = 2222
@@ -40,6 +41,13 @@ func init() {
 
 func main() {
 	mainRouter := chi.NewRouter()
+	mainRouter.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "DELETE", "PATCH", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+	}))
 	modules := []Module{
 		authentication.NewAuthModule(db),
 		users.NewUsersModule(db),
