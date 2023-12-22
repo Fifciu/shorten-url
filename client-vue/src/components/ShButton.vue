@@ -33,6 +33,7 @@ const props = defineProps({
 
   &-secondary {
     border: 2px solid $colorBlue;
+    background-color: $colorWhite;
     color: $colorBlue;
   }
 }
