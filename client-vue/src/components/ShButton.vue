@@ -5,19 +5,20 @@ const props = defineProps({
   variant: {
     type: String,
     validator: (val) => ['primary', 'secondary'].includes(val)
-  }
+  },
+  roundy: Boolean
 });
 </script>
 
 <template>
-  <button :class="`btn btn-${props.variant}`">
+  <button :class="`btn btn-${props.variant}${props.roundy ? ' btn-roundy' : ''}`">
     <slot />
   </button>
 </template>
 
 <style lang="scss" scoped>
 .btn {
-  padding: 16px 0;
+  padding: 16px 32px;
   border-radius: 8px;
   box-shadow: 0px 3.62px 9.05px 0px rgba(0, 0, 0, 0.25);
   font-family: $fontFamily;
@@ -35,6 +36,10 @@ const props = defineProps({
     border: 2px solid $colorBlue;
     background-color: $colorWhite;
     color: $colorBlue;
+  }
+
+  &-roundy {
+    border-radius: 24px;
   }
 }
 </style>
