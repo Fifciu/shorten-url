@@ -30,14 +30,8 @@ v0.0.3:
 
 - [ ] refactor (tidy auth/user controllers)
 - [ ] fix controller tests
-
-v0.0.4:
-
-- [ ] create TS Client
+- [x] create TS Client
 - [ ] write e2e tests in ts client
-
-v0.0.4:
-
 - [ ] create client project
 - [ ] sign up
 - [ ] sign in
@@ -53,4 +47,5 @@ Backlog:
 
 - [ ] URLs expire after 5 years (I still need to specify how will it look like, I mean - expiration process),
 - [ ] Counting views
-- [ ] add linter
+- [ ] add linter (go)
+- [ ] add db migrations on launch
