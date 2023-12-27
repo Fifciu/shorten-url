@@ -8,7 +8,7 @@ const showedMobileMenu = ref(false);
 <template>
     <header class="header">
       <div class="header__left">
-        <img src="@/assets/logo.svg" alt="Short logo" class="header__logo" />
+        <router-link to="/"><img src="@/assets/logo.svg" alt="Short logo" class="header__logo" /></router-link>
         <ul class="desktop-menu__list">
           <li class="desktop-menu__list-item">
             <router-link to="/" class="desktop-menu__list-item-link">Home</router-link>
@@ -62,8 +62,8 @@ const showedMobileMenu = ref(false);
       </div>
 
       <div class="mobile-menu__actions">
-        <ShButton variant="secondary" class="mb-2">Sign in</ShButton>
-        <ShButton variant="primary">Sign up</ShButton>
+        <ShButton variant="secondary" class="mb-2" to="/sign-in">Sign in</ShButton>
+        <ShButton variant="primary" to="/sign-up">Sign up</ShButton>
       </div>
     </div>
 </template>
@@ -215,6 +215,8 @@ const showedMobileMenu = ref(false);
             bottom: 0;
             right: 0;
             left: 0;
+            z-index: -1;
+            border-radius: 3px;
             margin: auto;
           }
         }
@@ -235,6 +237,7 @@ const showedMobileMenu = ref(false);
         font-weight: 700;
         line-height: normal;
         padding: 8px 24px;
+        color: $colorBlue;
 
         &.primary {
           border-radius: 16px;

@@ -21,7 +21,6 @@ import HelloWorld from './components/HelloWorld.vue'
 
 body {
   min-height: 100vh;
-  overflow: hidden;
   transition:
     color 0.5s,
     background-color 0.5s;

@@ -4,10 +4,15 @@ $colorWhite: #fff;
 $colorOrange: #EB5D27;
 $colorBlack: #1C1C1C;
 $colorDarkGrey: #5A5757;
+$colorLightGrey: #C7C4C4;
 $fontFamily: Inter;
 
 .mb-2 {
   margin-bottom: 16px;
+}
+
+.mb-4 {
+  margin-bottom: 32px;
 }
 
 $widthDesktop: 1024px;
