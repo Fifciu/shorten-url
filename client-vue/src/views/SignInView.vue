@@ -6,20 +6,16 @@ import ShButton from '@/components/ShButton.vue';
 </script>
 
 <template>
-  <main class="layout">
-    <LandingHeader class="header" />
-    <div class="contet">
-      <!-- <LandingCTA 
+  <div class="contet">
+    <!-- <LandingCTA 
         title="Shorten, Share, Control"
         description="Maximum Functionality in Short Links - See How Easy You Can Shorten URLs!"
       /> -->
-      <SignInForm />
-    </div>
-  </main>
+    <SignInForm />
+  </div>
 </template>
 
 <style lang="scss" scoped>
-
 .header {
   position: relative;
   z-index: 2;

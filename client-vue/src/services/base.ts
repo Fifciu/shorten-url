@@ -1,6 +1,6 @@
-const BASE_URL = 'http://localhost:2222';
+const BASE_URL = 'http://localhost/api/';
 
-export const sendToApi = async <T>(uri: string, config: RequestInit) => {
+export const sendToApi = async <T>(uri: string, config: RequestInit, hasResponseBody: boolean = true) => {
   const url = new URL(uri, BASE_URL);
   const response = await fetch(url, {
     headers: {
@@ -9,6 +9,10 @@ export const sendToApi = async <T>(uri: string, config: RequestInit) => {
     },
     ...config
   });
+
+  if (!hasResponseBody) {
+    return response
+  }
 
   const responseBody = await response.json();
   if (response.ok) {

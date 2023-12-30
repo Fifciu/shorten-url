@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import LandingHeader from '@/components/Landing/LandingHeader.vue';
-import LandingCTA from '@/components/Landing/LandingCTA.vue';
-import ShButton from '@/components/ShButton.vue';
 </script>
 
 <template>
-  <LandingCTA class="cta" title="Simplify Your Links!"
-    :description="`Transform lengthy URLs into short,<br> shareable ones with a single click.`">
-    <ShButton variant="primary" roundy>Discover</ShButton>
-  </LandingCTA>
-  <img src="@/assets/zygzag-2.svg" class="desktop-zygzag-img" />
-  <img src="@/assets/home-man.png" class="desktop-man-img" />
+  <main class="layout">
+    <LandingHeader class="header" />
+    <slot></slot>
+  </main>
 </template>
 
 <style lang="scss" scoped>
-.desktop-man-img,
-.desktop-zygzag-img {
+.desktop-man-img, .desktop-zygzag-img {
   display: none;
 }
 
@@ -38,7 +33,6 @@ import ShButton from '@/components/ShButton.vue';
     right: 400px;
     top: 0;
   }
-
   .desktop-man-img {
     display: block;
     position: absolute;

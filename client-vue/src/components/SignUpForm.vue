@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { reactive } from 'vue';
 import ShButton from '@/components/ShButton.vue';
 import ShInput from '@/components/ShInput.vue';
 import ShPassword from '@/components/ShPassword.vue';
 import ShAlternativeLink from '@/components/ShAlternativeLink.vue';
+import { authenticationService } from '@/services/authentication';
 
 const formData = reactive({
   email: '',
@@ -11,8 +12,12 @@ const formData = reactive({
   password: ''
 });
 
-const onSubmit = event => {
-  // TODO: Validators
+const onSubmit = async event => {
+  try {
+    const result = await authenticationService.register(formData.fullname, formData.email, formData.password);
+  } catch (err) {
+    console.error(err);
+  }
 };
 </script>
 

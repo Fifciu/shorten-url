@@ -1,10 +1,22 @@
-<script setup lang="ts">
+<script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { shallowRef, provide } from 'vue';
+import router from './router';
+import * as layouts from '@/layouts';
+
+const layout = shallowRef('div');
+
+router.afterEach((to) => {
+  layout.value = layouts[to.meta.layout] || 'div';
+});
+
+provide('app:layout', layout);
 </script>
 
 <template>
-  <RouterView />
+  <component :is="layout || 'div'">
+    <RouterView></RouterView>
+  </component>
 </template>
 
 <style lang="scss">

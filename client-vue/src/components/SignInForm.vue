@@ -4,14 +4,20 @@ import ShButton from '@/components/ShButton.vue';
 import ShInput from '@/components/ShInput.vue';
 import ShPassword from '@/components/ShPassword.vue';
 import ShAlternativeLink from '@/components/ShAlternativeLink.vue';
+import { authenticationService } from '@/services/authentication';
 
 const formData = reactive({
   email: '',
   password: ''
 });
 
-const onSubmit = event => {
+const onSubmit = async event => {
   // TODO: Validators
+  try {
+    await authenticationService.login(formData.email, formData.password);
+  } catch (err) {
+    console.error(err);
+  }
 };
 </script>
 
