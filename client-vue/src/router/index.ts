@@ -32,11 +32,21 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       meta: {
-        layout: 'Landing'
+        layout: 'Dashboard',
+        isAuth: true
       },
-      component: () => import('@/views/Dashboard.vue')
+      component: () => import('@/views/DashboardView.vue')
+    },
+    {
+      path: '/account',
+      name: 'account',
+      meta: {
+        layout: 'Dashboard',
+        isAuth: true
+      },
+      component: () => import('@/views/AccountView.vue')
     }
   ]
-})
+});
 
 export default router

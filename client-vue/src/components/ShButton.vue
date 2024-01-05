@@ -7,12 +7,13 @@ const props = defineProps({
     validator: (val) => ['primary', 'secondary'].includes(val)
   },
   to: String,
-  roundy: Boolean
+  roundy: Boolean,
+  disabled: Boolean
 });
 </script>
 
 <template>
-  <button :class="`btn btn-${props.variant}${props.roundy ? ' btn-roundy' : ''}`">
+  <button :class="`btn btn-${props.variant}${props.roundy ? ' btn-roundy' : ''}`" :disabled="props.disabled">
     <router-link v-if="props.to" :to="props.to">
       <slot></slot>
     </router-link>
@@ -36,10 +37,25 @@ const props = defineProps({
     color: $colorWhite;
   }
 
-  &-secondary, &-secondary > a {
+  &-primary > a {
+    color: $colorWhite;
+  }
+
+  &-secondary {
     border: 2px solid $colorBlue;
     background-color: $colorWhite;
     color: $colorBlue;
+  }
+
+  &-secondary > a {
+    color: $colorBlue;
+  }
+
+  &:disabled {
+    border: none;
+    background-color: $colorGrey;
+    color: $colorWhite;
+    cursor: not-allowed;
   }
 
   &-roundy {

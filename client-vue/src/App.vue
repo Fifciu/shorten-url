@@ -1,14 +1,34 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { shallowRef, provide } from 'vue';
+import { shallowRef, provide, reactive } from 'vue';
 import router from './router';
 import * as layouts from '@/layouts';
+import Cookie from 'js-cookie';
+import { useUserStore } from '@/stores/user';
 
+const formData = reactive({
+  email: '',
+  password: ''
+});
+
+const userStore = useUserStore();
 const layout = shallowRef('div');
 
 router.afterEach((to) => {
   layout.value = layouts[to.meta.layout] || 'div';
 });
+
+router.beforeEach((to) => {
+  // TODO: Improve check
+  // TODO: Move away this check
+  const sessionToken = Cookie.get('session-token');
+  userStore.setSessionToken(sessionToken);
+  if (to.meta?.isAuth && !sessionToken) {
+    return { name: 'sign-in' }
+  } else if (sessionToken && ['sign-in', 'sign-up'].includes(to.name)) {
+    return { name: 'dashboard'}
+  }
+})
 
 provide('app:layout', layout);
 </script>

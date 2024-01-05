@@ -1,20 +1,29 @@
-<script setup>
+<script setup lang="ts">
 import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import ShButton from '@/components/ShButton.vue';
 import ShInput from '@/components/ShInput.vue';
 import ShPassword from '@/components/ShPassword.vue';
 import ShAlternativeLink from '@/components/ShAlternativeLink.vue';
 import { authenticationService } from '@/services/authentication';
+import { useUserStore } from '@/stores/user';
+import Cookie from 'js-cookie';
 
 const formData = reactive({
   email: '',
   password: ''
 });
 
+const router = useRouter();
+const userStore = useUserStore();
+
 const onSubmit = async event => {
   // TODO: Validators
   try {
     await authenticationService.login(formData.email, formData.password);
+    const sessionToken = Cookie.get('session-token');
+    userStore.setSessionToken(sessionToken);
+    router.push('/dashboard');
   } catch (err) {
     console.error(err);
   }

@@ -1,12 +1,24 @@
 <script setup lang="ts">
-import LandingHeader from '@/components/Landing/LandingHeader.vue';
-import LandingCTA from '@/components/Landing/LandingCTA.vue';
+import DashboardCTA from '@/components/Dashboard/DashboardCTA.vue';
+import DashboardDatatable from '@/components/Dashboard/DashboardDatatable.vue';
+import ShInput from '@/components/ShInput.vue';
 import ShButton from '@/components/ShButton.vue';
+import { ref } from 'vue';
+
+import { useUserStore } from '@/stores/user';
+
+const { user } = useUserStore();
+const searchValue = ref('');
 </script>
 
 <template>
   <main class="layout">
-    hehehehehhe
+    <DashboardCTA 
+      :title="`Welcome ${user!.fullname}!`"
+      description="Shorten to your heart's content! Unlimited. "
+      class="mb-10"
+    />
+    <DashboardDatatable />
   </main>
 </template>
 
@@ -16,9 +28,7 @@ import ShButton from '@/components/ShButton.vue';
 }
 
 .cta {
-  margin-top: 100px;
-  padding: 0 16px;
-  overflow: hidden;
+  display: none;
 }
 
 .header {
@@ -43,9 +53,8 @@ import ShButton from '@/components/ShButton.vue';
   }
 
   .cta {
-    display: inline-block;
-    padding-left: 138px;
-    margin-top: 175px;
+    display: block;
+    margin-top: 44px;
   }
 }
 </style>

@@ -1,9 +1,12 @@
 $zmienna: red;
 $colorBlue: #0043C3;
+$colorWhiteBlue: #F4F6FA;
+$colorWhiteGrey: #F2F0F0;
 $colorWhite: #fff;
 $colorOrange: #EB5D27;
 $colorBlack: #1C1C1C;
 $colorDarkGrey: #5A5757;
+$colorGrey: #8F8B8B;
 $colorLightGrey: #C7C4C4;
 $fontFamily: Inter;
 
@@ -11,8 +14,30 @@ $fontFamily: Inter;
   margin-bottom: 16px;
 }
 
+.mr-2 {
+  margin-right: 16px;
+}
+
+.mx-2{
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.px-2 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 .mb-4 {
   margin-bottom: 32px;
+}
+
+.mb-10 {
+  margin-bottom: 80px;
+}
+
+.w-100{
+  width: 100%;
 }
 
 $widthDesktop: 1024px;

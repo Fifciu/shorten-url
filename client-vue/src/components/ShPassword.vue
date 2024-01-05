@@ -27,7 +27,7 @@ const isPasswordVisible = ref(false);
     <div class="input-subwrapper">
       <input :type="isPasswordVisible ? 'text' : 'password'" class="input" :id="props.uniqueId" :placeholder="props.placeholder" :model-value="props.value"
       @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
-      <button type="button" class="btn-toggle-password" @click="isPasswordVisible = !isPasswordVisible"><img src="@/assets/hide-password.svg" /></button>
+      <button type="button" class="btn-toggle-password" @click="isPasswordVisible = !isPasswordVisible"><img src="@/assets/show-password.svg" v-show="!isPasswordVisible" /><img src="@/assets/hide-password.svg" v-show="isPasswordVisible" /></button>
     </div>
   </div>
 </template>

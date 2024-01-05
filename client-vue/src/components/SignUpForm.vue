@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { reactive } from 'vue';
 import ShButton from '@/components/ShButton.vue';
 import ShInput from '@/components/ShInput.vue';
