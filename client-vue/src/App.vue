@@ -52,7 +52,7 @@ provide('app:layout', layout);
 }
 
 body {
-  min-height: 100vh;
+  // min-height: 100vh;
   transition:
     color 0.5s,
     background-color 0.5s;
