@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { REDIRECT_BASE_URL } from '@/const';
 
 const props = defineProps({
   name: String,
@@ -39,7 +40,7 @@ function toggle() {
       <div class="item-value">{{ props.name }}</div>
       <div class="item-label">Short link</div>
       <div class="item-value">
-        <span class="baselink">https://short.link/</span>
+        <span class="baselink">{{ REDIRECT_BASE_URL }}</span>
         <span class="alias">{{ props.short_link }}</span>
       </div>
       <div class="item-label">Updated at</div>
@@ -51,7 +52,7 @@ function toggle() {
         <button><img src="@/assets/bin.svg" /></button>
       </div>
     </div>
-    
+
   </div>
 </template>
 
@@ -134,5 +135,5 @@ function toggle() {
 .alias {
   color: $colorDarkGrey;
   font-weight: 600;
-  text-transform: lowercase;
+  text-transform: none;
 }</style>

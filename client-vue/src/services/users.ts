@@ -1,10 +1,10 @@
 import { sendToApi } from "./base";
 
-const MODULE_BASE_PATH = '/users';
+const MODULE_BASE_PATH = 'users';
 
 export const usersService = {
   async changeEmail(current_password: string, new_email: string) {
-    return sendToApi<undefined>(`${MODULE_BASE_PATH}/email`, {
+    return sendToApi(`${MODULE_BASE_PATH}/email`, {
       method: 'PATCH',
       body: JSON.stringify({
         current_password,
@@ -14,7 +14,7 @@ export const usersService = {
   },
 
   async changePassword(current_password: string, new_password: string) {
-    return sendToApi<undefined>(`${MODULE_BASE_PATH}/password`, {
+    return sendToApi(`${MODULE_BASE_PATH}/password`, {
       method: 'PATCH',
       body: JSON.stringify({
         current_password,

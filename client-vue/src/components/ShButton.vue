@@ -23,6 +23,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .btn {
+  cursor: pointer;
   padding: 16px 32px;
   border-radius: 8px;
   box-shadow: 0px 3.62px 9.05px 0px rgba(0, 0, 0, 0.25);

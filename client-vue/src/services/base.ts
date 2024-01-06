@@ -1,6 +1,6 @@
 const BASE_URL = 'http://localhost/api/';
 
-export const sendToApi = async <T>(uri: string, config: RequestInit, hasResponseBody: boolean = true) => {
+export const sendToApi = async (uri: string, config: RequestInit): Promise<Response> => {
   const url = new URL(uri, BASE_URL);
   const response = await fetch(url, {
     headers: {
@@ -10,9 +10,18 @@ export const sendToApi = async <T>(uri: string, config: RequestInit, hasResponse
     ...config
   });
 
-  if (!hasResponseBody) {
-    return response
-  }
+  return response
+}
+
+export const sendToApiExpectBody = async <T>(uri: string, config: RequestInit): Promise<T> => {
+  const url = new URL(uri, BASE_URL);
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...config?.headers,
+    },
+    ...config
+  });
 
   const responseBody = await response.json();
   if (response.ok) {

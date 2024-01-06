@@ -4,7 +4,7 @@ const MODULE_BASE_PATH = 'authentication'; // without / at the begginig
 
 export const authenticationService = {
   async register(fullname: string, email: string, password: string) {
-    return sendToApi<undefined>(`${MODULE_BASE_PATH}/register`, {
+    return sendToApi(`${MODULE_BASE_PATH}/register`, {
       method: 'POST',
       credentials: 'same-origin',
       body: JSON.stringify({
@@ -12,30 +12,30 @@ export const authenticationService = {
         email,
         password
       })
-    }, false);
+    });
   },
 
   async login(email: string, password: string) {
-    await sendToApi<undefined>(`${MODULE_BASE_PATH}/login`, {
+    await sendToApi(`${MODULE_BASE_PATH}/login`, {
       method: 'POST',
       credentials: 'same-origin',
       body: JSON.stringify({
         email,
         password
       })
-    }, false);
+    });
   },
 
   async refresh() {
-    await sendToApi<undefined>(`${MODULE_BASE_PATH}/refresh`, {
+    await sendToApi(`${MODULE_BASE_PATH}/refresh`, {
       method: 'POST',
       credentials: 'same-origin',
-    }, false);
+    });
   },
 
   async logout() {
-    await sendToApi<undefined>(`${MODULE_BASE_PATH}/logout`, {
+    await sendToApi(`${MODULE_BASE_PATH}/logout`, {
       method: 'POST'
-    }, false);
+    });
   },
 };

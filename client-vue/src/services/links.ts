@@ -1,6 +1,6 @@
-import { sendToApi } from "./base";
+import { sendToApi, sendToApiExpectBody } from "./base";
 
-const MODULE_BASE_PATH = '/links';
+const MODULE_BASE_PATH = 'links';
 
 export type Link = {
   id: number,
@@ -19,7 +19,7 @@ export type UpdateLinkDto = {
 
 export const linksService = {
   async add(name: string, original_url: string, alias?: string) {
-    return sendToApi<Link>(`${MODULE_BASE_PATH}/`, {
+    return sendToApiExpectBody<Link>(`${MODULE_BASE_PATH}/`, {
       method: 'POST',
       body: JSON.stringify({
         name,
@@ -30,19 +30,19 @@ export const linksService = {
   },
 
   async delete(id: number) {
-    await sendToApi<undefined>(`${MODULE_BASE_PATH}/${id}`, {
+    await sendToApi(`${MODULE_BASE_PATH}/${id}`, {
       method: 'DELETE'
     });
   },
 
   async getMyMany() {
-    await sendToApi<Link[]>(`${MODULE_BASE_PATH}/`, {
+    return await sendToApiExpectBody<Link[]>(`${MODULE_BASE_PATH}/`, {
       method: 'GET'
     });
   },
 
   async update(id: number, updateLinkDto: UpdateLinkDto) {
-    await sendToApi<Link>(`${MODULE_BASE_PATH}/${id}`, {
+    await sendToApiExpectBody<Link>(`${MODULE_BASE_PATH}/${id}`, {
       method: 'POST',
       body: JSON.stringify(updateLinkDto)
     });

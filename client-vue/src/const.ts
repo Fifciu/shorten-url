@@ -1,0 +1,1 @@
+export const REDIRECT_BASE_URL = 'http://localhost/r/';

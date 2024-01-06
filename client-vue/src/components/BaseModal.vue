@@ -7,8 +7,8 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="modal">
-    <div class="dialog">
+  <div class="modal" @click="emit('close')">
+    <div class="dialog" @click.stop>
       <div class="wrapper">
         <button class="dialog-close-btn" @click="emit('close')">
           <img src="@/assets/close.svg" alt="Close button" />
@@ -52,6 +52,7 @@ const emit = defineEmits<{
   }
 
   &-close-btn {
+    cursor: pointer;
     position: absolute;
     top: 0;
     right: 0;
@@ -68,6 +69,10 @@ const emit = defineEmits<{
     height: initial;
     border-radius: 8px;
     border: 2px solid $colorLightGrey;
+  }
+
+  .dialog-close-btn {
+    cursor: pointer;
   }
 }
 </style>
