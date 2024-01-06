@@ -23,10 +23,20 @@ export const useLinksStore = defineStore('links', () => {
     }
   }
 
+  async function deleteLink(linkId: number) {
+    try {
+      await linksService.delete(linkId);
+      links.splice(links.findIndex(link => link.id === linkId), 1);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return {
     links,
     fetchMyLinks,
-    addNewLink
+    addNewLink,
+    deleteLink
   }
 })
 

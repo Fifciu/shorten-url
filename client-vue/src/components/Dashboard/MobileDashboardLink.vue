@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { REDIRECT_BASE_URL } from '@/const';
+import BinButton from '@/components/Actions/BinButton.vue';
 
 const props = defineProps({
+  id: Number,
   name: String,
   short_link: String,
   updated_at: String,
@@ -49,7 +51,7 @@ function toggle() {
       <div class="item-actions">
         <button><img src="@/assets/copy.svg" /></button>
         <button class="mx-2"><img src="@/assets/edit.svg" /></button>
-        <button><img src="@/assets/bin.svg" /></button>
+        <BinButton :linkId="props.id" />
       </div>
     </div>
 

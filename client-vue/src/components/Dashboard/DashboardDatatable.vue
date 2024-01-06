@@ -4,6 +4,7 @@ import ShButton from '@/components/ShButton.vue';
 import MobileDashboardLink from '@/components/Dashboard/MobileDashboardLink.vue';
 import BaseModal from '@/components/BaseModal.vue';
 import NewLinkForm from '@/components/Forms/NewLinkForm.vue';
+import BinButton from '@/components/Actions/BinButton.vue';
 import { onBeforeMount, ref } from 'vue';
 
 import { useUserStore } from '@/stores/user';
@@ -56,7 +57,7 @@ const records = [
       <button>Sort By</button>
       <ShButton variant="primary" @click="isAddLinkOpen = !isAddLinkOpen">New link</ShButton>
     </div>
-    <table class="content">
+    <table class="content" v-if="links.length">
       <tr class="headers">
         <th>Name</th>
         <th>Updated at</th>
@@ -70,7 +71,7 @@ const records = [
         <td class="actions">
           <button><img src="@/assets/copy.svg" /></button>
           <button><img src="@/assets/edit.svg" /></button>
-          <button><img src="@/assets/bin.svg" /></button>
+          <BinButton :linkId="record.id" />
           <button><img src="@/assets/wishlist-empty.svg" /></button>
         </td>
       </tr>
@@ -82,7 +83,7 @@ const records = [
       <button class="sort-by--mobile">Sort By</button>
     </div>
     <div class="content px-2">
-      <MobileDashboardLink v-for="record in links" :key="record.id" :name="record.name" :short_link="record.alias"
+      <MobileDashboardLink v-for="record in links" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
         :updated_at="record.updated_at" />
     </div>
   </div>
