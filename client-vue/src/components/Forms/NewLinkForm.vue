@@ -15,7 +15,8 @@ const formData = reactive({
 });
 const { links, addNewLink } = useLinksStore();
 async function onSubmit() {
-  return await addNewLink(formData.name, formData.original_url, formData.alias);
+  await addNewLink(formData.name, formData.original_url, formData.alias);
+  emit('close');
 }
 </script>
 
@@ -25,15 +26,15 @@ async function onSubmit() {
   <form @submit.prevent="onSubmit">
     <div class="fields">
       <BaseInput v-model="formData.original_url" class="mb-2" uniqueId="addLinkNewUrl" type="text" label="Long URL"
-        placeholder="example: http://very-long-link.com/example-example" hasBlackLabel />
+        placeholder="example: http://very-long-link.com/example-example" label-style="black" />
       <div class="divided-fields mb-2">
-        <BaseInput uniqueId="domain" type="text" label="Domain" :value="REDIRECT_BASE_URL" disabled hasBlackLabel />
+        <BaseInput uniqueId="domain" type="text" label="Domain" :value="REDIRECT_BASE_URL" disabled label-style="black" />
         <span class="span">/</span>
         <BaseInput v-model="formData.alias" uniqueId="addLinkBackHalf" type="text" label="Back-half (optional)"
-          placeholder="random string if empty, or provide alias" hasBlackLabel />
+          placeholder="random string if empty, or provide alias" label-style="black" />
       </div>
       <BaseInput v-model="formData.name" class="mb-3" uniqueId="addLinkBackHalf" type="text" label="Name short link"
-        placeholder="example: My Favourite Song" hasBlackLabel />
+        placeholder="example: My Favourite Song" label-style="black" />
     </div>
     <div class="buttons">
       <BaseButton variant="secondary mr-2" @click.prevent="emit('close')" type="button">Cancel</BaseButton>

@@ -2,6 +2,9 @@
 import BaseInput from '@/components/Base/BaseInput.vue';
 import BaseButton from '@/components/Base/BaseButton.vue';
 import MobileDashboardLink from '@/components/Dashboard/MobileDashboardLink.vue';
+import CopyButton from '@/components/Actions/CopyButton.vue';
+import EditButton from '@/components/Actions/EditButton.vue';
+import WishlistButton from '@/components/Actions/WishlistButton.vue';
 import BinButton from '@/components/Actions/BinButton.vue';
 import { defineEmits, ref } from 'vue';
 
@@ -23,7 +26,7 @@ const { links } = useLinksStore();
 <template>
   <div class="datatable-desktop">
     <div class="actions">
-      <BaseInput uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" placeholder="Search"
+      <BaseInput uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" label-style="dark-grey" placeholder="Search"
         v-model="searchValue" />
       <button>Sort By</button>
       <BaseButton variant="primary" @click="emit('openAddLinkModal')">New link</BaseButton>
@@ -40,10 +43,10 @@ const { links } = useLinksStore();
         <td class="date">{{ record.updated_at }}</td>
         <td class="link">{{ REDIRECT_BASE_URL }}{{ record.alias }}</td>
         <td class="actions">
-          <button><img src="@/assets/copy.svg" /></button>
-          <button><img src="@/assets/edit.svg" /></button>
+          <CopyButton :toCopy="REDIRECT_BASE_URL + record.alias" />
+          <EditButton :linkId="record.id" />
           <BinButton :linkId="record.id" />
-          <button><img src="@/assets/wishlist-empty.svg" /></button>
+          <WishlistButton :linkId="record.id" />
         </td>
       </tr>
     </table>

@@ -15,14 +15,20 @@ const props = defineProps({
     type: String,
     required: false
   },
-  hasBlackLabel: Boolean,
+  labelStyle: {
+    type: String,
+    default: 'blue',
+    validator(val) {
+      return ['blue', 'black', 'dark-grey'].includes(val);
+    }
+  },
   modelValue: String
 });
 </script>
 
 <template>
   <div class="input-wrapper">
-    <label v-if="props.label" :class="['input-label', props.hasBlackLabel && 'input-label--black']" :for="props.uniqueId">{{ label }}</label>
+    <label v-if="props.label" :class="['input-label', props.labelStyle === 'black' && 'input-label--black', props.labelStyle === 'dark-grey' && 'input-label--dark-grey']" :for="props.uniqueId">{{ label }}</label>
     <input class="input" :id="props.uniqueId" :placeholder="props.placeholder" :model-value="props.value" @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
   </div>
 </template>
@@ -55,6 +61,11 @@ const props = defineProps({
 
       &--black {
         color: $colorBlack;
+      }
+
+      &--dark-grey {
+        color: $colorDarkGrey;
+        font-weight: 600;
       }
     }
 

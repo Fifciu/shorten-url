@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { REDIRECT_BASE_URL } from '@/const';
+import CopyButton from '@/components/Actions/CopyButton.vue';
+import EditButton from '@/components/Actions/EditButton.vue';
+import WishlistButton from '@/components/Actions/WishlistButton.vue';
 import BinButton from '@/components/Actions/BinButton.vue';
 
 const props = defineProps({
@@ -49,9 +52,10 @@ function toggle() {
       <div class="item-value">{{ props.updated_at }}</div>
       <div class="item-label">Actions</div>
       <div class="item-actions">
-        <button><img src="@/assets/copy.svg" /></button>
-        <button class="mx-2"><img src="@/assets/edit.svg" /></button>
-        <BinButton :linkId="props.id" />
+        <CopyButton :toCopy="REDIRECT_BASE_URL + props.short_link" />
+        <EditButton class="mx-2" :linkId="props.id" />
+        <BinButton class="mr-2" :linkId="props.id" />
+        <WishlistButton :linkId="props.id" />
       </div>
     </div>
 
@@ -138,4 +142,5 @@ function toggle() {
   color: $colorDarkGrey;
   font-weight: 600;
   text-transform: none;
-}</style>
+}
+</style>
