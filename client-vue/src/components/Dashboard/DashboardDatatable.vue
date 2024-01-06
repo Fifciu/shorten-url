@@ -2,10 +2,8 @@
 import BaseInput from '@/components/Base/BaseInput.vue';
 import BaseButton from '@/components/Base/BaseButton.vue';
 import MobileDashboardLink from '@/components/Dashboard/MobileDashboardLink.vue';
-import BaseModal from '@/components/Base/BaseModal.vue';
-import NewLinkForm from '@/components/Forms/NewLinkForm.vue';
 import BinButton from '@/components/Actions/BinButton.vue';
-import { onBeforeMount, ref } from 'vue';
+import { defineEmits, ref } from 'vue';
 
 import { useUserStore } from '@/stores/user';
 import { useLinksStore } from '@/stores/links';
@@ -13,40 +11,13 @@ import { useLinksStore } from '@/stores/links';
 import { REDIRECT_BASE_URL } from '@/const';
 
 const { user } = useUserStore();
+const emit = defineEmits<{
+  (e: 'openAddLinkModal'): void
+}>();
+
 const searchValue = ref('');
-const isAddLinkOpen = ref(false);
 
-const { links, fetchMyLinks } = useLinksStore();
-onBeforeMount(() => {
-  fetchMyLinks();
-});
-
-const records = [
-  {
-    id: 1,
-    user_id: 3,
-    name: 'My Youtube',
-    original_url: 'https://fifciuu.com',
-    updated_at: '2022-11-23',
-    alias: 'ckdl5ndpwa'
-  },
-  {
-    id: 2,
-    user_id: 3,
-    name: 'My Favourite Song',
-    original_url: 'https://xdddd.com',
-    updated_at: '2025-11-23',
-    alias: 'dpa05987cm'
-  },
-  {
-    id: 3,
-    user_id: 3,
-    name: 'Instagram',
-    original_url: 'https://niewiem.com',
-    updated_at: '2022-11-23',
-    alias: 'smak41k2k7'
-  }
-];
+const { links } = useLinksStore();
 </script>
 
 <template>
@@ -55,7 +26,7 @@ const records = [
       <BaseInput uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" placeholder="Search"
         v-model="searchValue" />
       <button>Sort By</button>
-      <BaseButton variant="primary" @click="isAddLinkOpen = !isAddLinkOpen">New link</BaseButton>
+      <BaseButton variant="primary" @click="emit('openAddLinkModal')">New link</BaseButton>
     </div>
     <table class="content" v-if="links.length">
       <tr class="headers">
@@ -79,7 +50,7 @@ const records = [
   </div>
   <div class="datatable-mobile">
     <div class="actions px-2">
-      <BaseButton variant="primary" class="w-100" @click="isAddLinkOpen = !isAddLinkOpen">New link</BaseButton>
+      <BaseButton variant="primary" class="w-100" @click="emit('openAddLinkModal')">New link</BaseButton>
       <button class="sort-by--mobile">Sort By</button>
     </div>
     <div class="content px-2">
@@ -87,12 +58,6 @@ const records = [
         :updated_at="record.updated_at" />
     </div>
   </div>
-
-  <Teleport to="body">
-    <BaseModal v-if="isAddLinkOpen" @close="isAddLinkOpen = false">
-      <NewLinkForm @close="isAddLinkOpen = false" />
-    </BaseModal>
-  </Teleport>
 </template>
 
 <style lang="scss" scoped>
