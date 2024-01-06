@@ -8,31 +8,42 @@ const props = defineProps({
 });
 
 const isOpen = ref(false);
+function openIfClosed() {
+  if (!isOpen.value) {
+    isOpen.value = true;
+  }
+}
+
+function toggle() {
+  isOpen.value = !isOpen.value;
+}
 </script>
 
 <template>
-  <div :class="['link', isOpen && 'link--opened']" @click="isOpen = !isOpen">
-    <button class="indicator">
+  <div :class="['link', isOpen && 'link--opened']" @click="openIfClosed">
+    <button class="indicator" @click.stop="toggle">
       <img src="@/assets/indicator-closed.svg" v-show="!isOpen" />
       <img src="@/assets/indicator-opened.svg" v-show="isOpen" />
     </button>
+
     <div class="content content--closed" v-if="!isOpen">
       <div class="item-preview">
         <span class="item-label">Name</span>
-        <span class="item-name">{{ props.name }}</span>
+        <span class="item-value">{{ props.name }}</span>
       </div>
       <button class="item-wishlist"><img src="@/assets/wishlist-empty.svg" /></button>
     </div>
+
     <div class="content content--opened" v-else>
       <div class="item-label">Name</div>
-      <div class="item-name">{{ props.name }}</div>
+      <div class="item-value">{{ props.name }}</div>
       <div class="item-label">Short link</div>
-      <div class="item-name">
+      <div class="item-value">
         <span class="baselink">https://short.link/</span>
         <span class="alias">{{ props.short_link }}</span>
       </div>
       <div class="item-label">Updated at</div>
-      <div class="item-name">{{ props.updated_at }}</div>
+      <div class="item-value">{{ props.updated_at }}</div>
       <div class="item-label">Actions</div>
       <div class="item-actions">
         <button><img src="@/assets/copy.svg" /></button>
@@ -40,6 +51,7 @@ const isOpen = ref(false);
         <button><img src="@/assets/bin.svg" /></button>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -64,29 +76,6 @@ const isOpen = ref(false);
   width: calc(100% - 42px);
   justify-content: space-between;
 
-  .item-label {
-    margin-right: 16px;
-    color: $colorBlack;
-    font-family: Source Sans Pro;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    text-align: left;
-    /* 21px */
-  }
-
-  .item-name {
-    color: $colorDarkGrey;
-    font-family: Source Sans Pro;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%;
-    /* 21px */
-    text-transform: capitalize;
-  }
-
   &--opened {
     display: grid;
     grid-template-columns: auto auto;
@@ -101,6 +90,7 @@ const isOpen = ref(false);
 
   &--closed {
     cursor: pointer;
+
     .item-wishlist {
       margin-left: 16px;
     }
@@ -113,25 +103,36 @@ const isOpen = ref(false);
   align-items: center;
 }
 
-.baselink {
-  color: $colorGrey;
+.item-label,
+.item-value,
+.baselink,
+.alias {
   font-family: Source Sans Pro;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
-  /* 21px */
+}
+
+.item-label {
+  margin-right: 16px;
+  color: $colorBlack;
+  font-weight: 600;
+  text-align: left;
+}
+
+.item-value {
+  color: $colorDarkGrey;
+  text-transform: capitalize;
+}
+
+.baselink {
+  color: $colorGrey;
   text-transform: lowercase;
 }
 
 .alias {
   color: $colorDarkGrey;
-  font-family: Source Sans Pro;
-  font-size: 14px;
-  font-style: normal;
   font-weight: 600;
-  line-height: 150%;
-  /* 21px */
   text-transform: lowercase;
-}
-</style>
+}</style>

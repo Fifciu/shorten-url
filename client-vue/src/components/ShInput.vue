@@ -15,13 +15,14 @@ const props = defineProps({
     type: String,
     required: false
   },
+  hasBlackLabel: Boolean,
   modelValue: String
 });
 </script>
 
 <template>
   <div class="input-wrapper">
-    <label v-if="props.label" class="input-label" :for="props.uniqueId">{{ label }}</label>
+    <label v-if="props.label" :class="['input-label', props.hasBlackLabel && 'input-label--black']" :for="props.uniqueId">{{ label }}</label>
     <input class="input" :id="props.uniqueId" :placeholder="props.placeholder" :model-value="props.value" @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
   </div>
 </template>
@@ -41,12 +42,20 @@ const props = defineProps({
     &::placeholder {
       color: $colorLightGrey;
     }
+    &:disabled{
+      background: $colorWhiteGrey;
+      border: 1px solid $colorLightGrey;
+    }
 
     &-label {
       color: $colorBlue;
       font-size: 14px;
       font-weight: 500;
       margin-bottom: 4px;
+
+      &--black {
+        color: $colorBlack;
+      }
     }
 
     &-wrapper {
