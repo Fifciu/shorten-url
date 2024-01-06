@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LandingHeader from '@/components/Landing/LandingHeader.vue';
 import LandingCTA from '@/components/Landing/LandingCTA.vue';
-import ShButton from '@/components/ShButton.vue';
+import BaseButton from '@/components/Base/BaseButton.vue';
 </script>
 
 <template>

@@ -8,12 +8,15 @@ const props = defineProps({
   },
   to: String,
   roundy: Boolean,
+  shadow: Boolean,
   disabled: Boolean
 });
 </script>
 
 <template>
-  <button :class="`btn btn-${props.variant}${props.roundy ? ' btn-roundy' : ''}`" :disabled="props.disabled">
+  <button 
+    :class="['btn', `btn-${props.variant}`, props.roundy && 'btn-roundy', props.shadow && 'btn-shadow']" 
+    :disabled="props.disabled">
     <router-link v-if="props.to" :to="props.to">
       <slot></slot>
     </router-link>
@@ -26,7 +29,6 @@ const props = defineProps({
   cursor: pointer;
   padding: 16px 32px;
   border-radius: 8px;
-  box-shadow: 0px 3.62px 9.05px 0px rgba(0, 0, 0, 0.25);
   font-family: $fontFamily;
   font-size: 16px;
   font-style: normal;
@@ -61,6 +63,10 @@ const props = defineProps({
 
   &-roundy {
     border-radius: 24px;
+  }
+
+  &-shadow {
+    box-shadow: 0px 3.62px 9.05px 0px rgba(0, 0, 0, 0.25);
   }
 }
 </style>

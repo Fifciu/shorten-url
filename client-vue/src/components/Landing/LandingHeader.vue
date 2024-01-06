@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ShButton from '@/components/ShButton.vue';
+import BaseButton from '@/components/Base/BaseButton.vue';
 import { ref } from 'vue';
 
 const showedMobileMenu = ref(false);
@@ -62,8 +62,8 @@ const showedMobileMenu = ref(false);
       </div>
 
       <div class="mobile-menu__actions">
-        <ShButton variant="secondary" class="mb-2" to="/sign-in">Sign in</ShButton>
-        <ShButton variant="primary" to="/sign-up">Sign up</ShButton>
+        <BaseButton variant="secondary" class="mb-2" to="/sign-in">Sign in</BaseButton>
+        <BaseButton variant="primary" to="/sign-up">Sign up</BaseButton>
       </div>
     </div>
 </template>

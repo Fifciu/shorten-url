@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import ShButton from '@/components/ShButton.vue';
-import ShInput from '@/components/ShInput.vue';
-import ShPassword from '@/components/ShPassword.vue';
-import ShAlternativeLink from '@/components/ShAlternativeLink.vue';
+import BaseButton from '@/components/Base/BaseButton.vue';
+import BaseInput from '@/components/Base/BaseInput.vue';
+import BasePassword from '@/components/Base/BasePassword.vue';
+import BaseAlternativeLink from '@/components/Base/BaseAlternativeLink.vue';
 import { authenticationService } from '@/services/authentication';
 import { useUserStore } from '@/stores/user';
 import Cookie from 'js-cookie';
@@ -17,7 +17,7 @@ const formData = reactive({
 const router = useRouter();
 const userStore = useUserStore();
 
-const onSubmit = async event => {
+const onSubmit = async () => {
   // TODO: Validators
   try {
     await authenticationService.login(formData.email, formData.password);
@@ -40,12 +40,12 @@ const onSubmit = async event => {
       <img src="@/assets/ludzik-maly.svg" class="img-hi" />
     </div>
     <form class="sign-up" @submit.prevent="onSubmit">
-      <ShInput uniqueId="sign-up-email" type="email" label="Email" placeholder="example@example.com" validator="email"
+      <BaseInput uniqueId="sign-up-email" type="email" label="Email" placeholder="example@example.com" validator="email"
         class="mb-2" required v-model="formData.email" />
-      <ShPassword uniqueId="sign-up-password" label="Password" placeholder="Password" class="mb-4" minlength="8" required
+      <BasePassword uniqueId="sign-up-password" label="Password" placeholder="Password" class="mb-4" minlength="8" required
         v-model="formData.password" />
-      <ShButton variant="primary" class="submit-btn mb-2">Sign in</ShButton>
-      <ShAlternativeLink question="Already have an account?" link="/sign-up" linkedText="Sign up" />
+      <BaseButton variant="primary" class="submit-btn mb-2" shadow>Sign in</BaseButton>
+      <BaseAlternativeLink question="Already have an account?" link="/sign-up" linkedText="Sign up" />
     </form>
   </div>
 </template>

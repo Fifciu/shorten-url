@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import DashboardCTA from '@/components/Dashboard/DashboardCTA.vue';
 import DashboardDatatable from '@/components/Dashboard/DashboardDatatable.vue';
-import ShInput from '@/components/ShInput.vue';
-import ShButton from '@/components/ShButton.vue';
 import { ref } from 'vue';
 
 import { useUserStore } from '@/stores/user';

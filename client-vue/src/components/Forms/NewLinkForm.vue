@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, defineEmits } from 'vue';
-import ShInput from '@/components/ShInput.vue';
-import ShButton from '@/components/ShButton.vue';
+import BaseInput from '@/components/Base/BaseInput.vue';
+import BaseButton from '@/components/Base/BaseButton.vue';
 import { useLinksStore } from '@/stores/links';
 import { REDIRECT_BASE_URL } from '@/const';
 
@@ -24,20 +24,20 @@ async function onSubmit() {
   <hr class="title-divider" />
   <form @submit.prevent="onSubmit">
     <div class="fields">
-      <ShInput v-model="formData.original_url" class="mb-2" uniqueId="addLinkNewUrl" type="text" label="Long URL"
+      <BaseInput v-model="formData.original_url" class="mb-2" uniqueId="addLinkNewUrl" type="text" label="Long URL"
         placeholder="example: http://very-long-link.com/example-example" hasBlackLabel />
       <div class="divided-fields mb-2">
-        <ShInput uniqueId="domain" type="text" label="Domain" :value="REDIRECT_BASE_URL" disabled hasBlackLabel />
+        <BaseInput uniqueId="domain" type="text" label="Domain" :value="REDIRECT_BASE_URL" disabled hasBlackLabel />
         <span class="span">/</span>
-        <ShInput v-model="formData.alias" uniqueId="addLinkBackHalf" type="text" label="Back-half (optional)"
+        <BaseInput v-model="formData.alias" uniqueId="addLinkBackHalf" type="text" label="Back-half (optional)"
           placeholder="random string if empty, or provide alias" hasBlackLabel />
       </div>
-      <ShInput v-model="formData.name" class="mb-3" uniqueId="addLinkBackHalf" type="text" label="Name short link"
+      <BaseInput v-model="formData.name" class="mb-3" uniqueId="addLinkBackHalf" type="text" label="Name short link"
         placeholder="example: My Favourite Song" hasBlackLabel />
     </div>
     <div class="buttons">
-      <ShButton variant="secondary mr-2" @click.prevent="emit('close')" type="button">Cancel</ShButton>
-      <ShButton variant="primary" type="submit">Create</ShButton>
+      <BaseButton variant="secondary mr-2" @click.prevent="emit('close')" type="button">Cancel</BaseButton>
+      <BaseButton variant="primary" type="submit">Create</BaseButton>
     </div>
   </form>
 </template>

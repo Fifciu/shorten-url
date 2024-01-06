@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import LandingHeader from '@/components/Landing/LandingHeader.vue';
 import LandingCTA from '@/components/Landing/LandingCTA.vue';
-import ShButton from '@/components/ShButton.vue';
+import BaseButton from '@/components/Base/BaseButton.vue';
 </script>
 
 <template>
   <LandingCTA class="cta" title="Simplify Your Links!"
     :description="`Transform lengthy URLs into short,<br> shareable ones with a single click.`">
-    <ShButton variant="primary" roundy>Discover</ShButton>
+    <BaseButton variant="primary" roundy>Discover</BaseButton>
   </LandingCTA>
   <img src="@/assets/zygzag-2.svg" class="desktop-zygzag-img" />
   <img src="@/assets/home-man.png" class="desktop-man-img" />

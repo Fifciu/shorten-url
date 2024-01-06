@@ -1,9 +1,9 @@
 <script setup>
 import { reactive } from 'vue';
-import ShButton from '@/components/ShButton.vue';
-import ShInput from '@/components/ShInput.vue';
-import ShPassword from '@/components/ShPassword.vue';
-import ShAlternativeLink from '@/components/ShAlternativeLink.vue';
+import BaseButton from '@/components/Base/BaseButton.vue';
+import BaseInput from '@/components/Base/BaseInput.vue';
+import BasePassword from '@/components/Base/BasePassword.vue';
+import BaseAlternativeLink from '@/components/Base/BaseAlternativeLink.vue';
 import { authenticationService } from '@/services/authentication';
 
 const formData = reactive({
@@ -31,14 +31,14 @@ const onSubmit = async event => {
       <img src="@/assets/ludzik-maly.svg" class="img-hi" />
     </div>
     <form class="sign-up" @submit.prevent="onSubmit">
-      <ShInput uniqueId="sign-up-email" type="email" label="Email" placeholder="example@example.com" validator="email"
+      <BaseInput uniqueId="sign-up-email" type="email" label="Email" placeholder="example@example.com" validator="email"
         class="mb-2" required v-model="formData.email" />
-      <ShInput uniqueId="sign-up-fullname" type="text" label="Full name" placeholder="John Doe" class="mb-2" minlength="3"
+      <BaseInput uniqueId="sign-up-fullname" type="text" label="Full name" placeholder="John Doe" class="mb-2" minlength="3"
         required v-model="formData.fullname" />
-      <ShPassword uniqueId="sign-up-password" label="Password" placeholder="Password" class="mb-4" minlength="8" required
+      <BasePassword uniqueId="sign-up-password" label="Password" placeholder="Password" class="mb-4" minlength="8" required
         v-model="formData.password" />
-      <ShButton variant="primary" class="submit-btn mb-2">Sign up</ShButton>
-      <ShAlternativeLink question="Already have an account?" link="/sign-in" linkedText="Sign in" />
+      <BaseButton variant="primary" class="submit-btn mb-2" shadow>Sign up</BaseButton>
+      <BaseAlternativeLink question="Already have an account?" link="/sign-in" linkedText="Sign in" />
     </form>
   </div>
 </template>

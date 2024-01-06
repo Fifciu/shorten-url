@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ShInput from '@/components/ShInput.vue';
-import ShButton from '@/components/ShButton.vue';
+import BaseInput from '@/components/Base/BaseInput.vue';
+import BaseButton from '@/components/Base/BaseButton.vue';
 import MobileDashboardLink from '@/components/Dashboard/MobileDashboardLink.vue';
-import BaseModal from '@/components/BaseModal.vue';
+import BaseModal from '@/components/Base/BaseModal.vue';
 import NewLinkForm from '@/components/Forms/NewLinkForm.vue';
 import BinButton from '@/components/Actions/BinButton.vue';
 import { onBeforeMount, ref } from 'vue';
@@ -52,10 +52,10 @@ const records = [
 <template>
   <div class="datatable-desktop">
     <div class="actions">
-      <ShInput uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" placeholder="Search"
+      <BaseInput uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" placeholder="Search"
         v-model="searchValue" />
       <button>Sort By</button>
-      <ShButton variant="primary" @click="isAddLinkOpen = !isAddLinkOpen">New link</ShButton>
+      <BaseButton variant="primary" @click="isAddLinkOpen = !isAddLinkOpen">New link</BaseButton>
     </div>
     <table class="content" v-if="links.length">
       <tr class="headers">
@@ -79,7 +79,7 @@ const records = [
   </div>
   <div class="datatable-mobile">
     <div class="actions px-2">
-      <ShButton variant="primary" class="w-100" @click="isAddLinkOpen = !isAddLinkOpen">New link</ShButton>
+      <BaseButton variant="primary" class="w-100" @click="isAddLinkOpen = !isAddLinkOpen">New link</BaseButton>
       <button class="sort-by--mobile">Sort By</button>
     </div>
     <div class="content px-2">
