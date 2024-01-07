@@ -1,10 +1,29 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { authenticationService } from '@/services/authentication';
+import Cookie from 'js-cookie';
 
 export const useUserStore = defineStore('user', () => {
   const sessionToken = ref('');
   function setSessionToken (token: string) {
     sessionToken.value = token;
+  }
+
+  async function login(email: string, password: string) {
+    await authenticationService.login(email, password);
+    const sessionToken = Cookie.get('session-token');
+    setSessionToken(sessionToken);
+  }
+
+  async function register(fullname: string, email: string, password: string) {
+    await authenticationService.register(fullname, email, password);
+    const sessionToken = Cookie.get('session-token');
+    setSessionToken(sessionToken);
+  }
+
+  async function logout() {
+    await authenticationService.logout();
+    setSessionToken('');
   }
 
   const parsedToken = computed(() => {
@@ -25,6 +44,9 @@ export const useUserStore = defineStore('user', () => {
   const isAuth = computed(() => Boolean(user.value?.id));
 
   return {
+    register,
+    login,
+    logout,
     setSessionToken,
     user,
     isAuth

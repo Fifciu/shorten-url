@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import BaseButton from '@/components/Base/BaseButton.vue';
 import { ref } from 'vue';
+import routerInstance from '@/router';
 
 const showedMobileMenu = ref(false);
+const closeMenu = () => {
+  showedMobileMenu.value = false;
+}
+routerInstance.afterEach(closeMenu);
 </script>
 
 <template>

@@ -5,9 +5,7 @@ import BaseButton from '@/components/Base/BaseButton.vue';
 import BaseInput from '@/components/Base/BaseInput.vue';
 import BasePassword from '@/components/Base/BasePassword.vue';
 import BaseAlternativeLink from '@/components/Base/BaseAlternativeLink.vue';
-import { authenticationService } from '@/services/authentication';
 import { useUserStore } from '@/stores/user';
-import Cookie from 'js-cookie';
 
 const formData = reactive({
   email: '',
@@ -15,14 +13,12 @@ const formData = reactive({
 });
 
 const router = useRouter();
-const userStore = useUserStore();
+const { login } = useUserStore();
 
 const onSubmit = async () => {
   // TODO: Validators
   try {
-    await authenticationService.login(formData.email, formData.password);
-    const sessionToken = Cookie.get('session-token');
-    userStore.setSessionToken(sessionToken);
+    await login(formData.email, formData.password);
     router.push('/dashboard');
   } catch (err) {
     console.error(err);

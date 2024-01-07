@@ -1,20 +1,24 @@
 <script setup>
 import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import BaseButton from '@/components/Base/BaseButton.vue';
 import BaseInput from '@/components/Base/BaseInput.vue';
 import BasePassword from '@/components/Base/BasePassword.vue';
 import BaseAlternativeLink from '@/components/Base/BaseAlternativeLink.vue';
-import { authenticationService } from '@/services/authentication';
+import { useUserStore } from '@/stores/user';
 
 const formData = reactive({
   email: '',
   fullname: '',
   password: ''
 });
+const router = useRouter();
+const { login } = useUserStore();
 
 const onSubmit = async event => {
   try {
-    const result = await authenticationService.register(formData.fullname, formData.email, formData.password);
+    await login(formData.fullname, formData.email, formData.password);
+    router.push('/dashboard');
   } catch (err) {
     console.error(err);
   }

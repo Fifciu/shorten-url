@@ -2,9 +2,24 @@
 import BaseButton from '@/components/Base/BaseButton.vue';
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+import routerInstance from '@/router';
 
 const showedMobileMenu = ref(false);
-const userStore = useUserStore();
+const { user, logout } = useUserStore();
+const router = useRouter();
+
+const closeMenu = () => {
+  showedMobileMenu.value = false;
+}
+routerInstance.afterEach(closeMenu);
+
+const onClickLogout = async () => {
+  await logout();
+  router.push('/');
+}
+
+
 </script>
 
 <template>
@@ -21,7 +36,7 @@ const userStore = useUserStore();
         </button>
         <ul class="desktop-menu__cta-list">
           <li class="desktop-menu__cta-list-item"> 
-            {{ userStore.user.fullname }}
+            {{ user.fullname }}
           </li>
           <li class="desktop-menu__cta-list-item">
             <router-link to="/account" class="desktop-menu__cta-list-item-link"><img src="@/assets/settings.svg" /></router-link>
@@ -56,8 +71,7 @@ const userStore = useUserStore();
       </div>
 
       <div class="mobile-menu__actions">
-        <BaseButton variant="secondary" class="mb-2" to="/sign-in">Sign in</BaseButton>
-        <BaseButton variant="primary" to="/sign-up">Sign up</BaseButton>
+        <BaseButton variant="secondary" class="mb-2" @click="onClickLogout">Log out</BaseButton>
       </div>
     </div>
 </template>
