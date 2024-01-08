@@ -4,6 +4,7 @@ import DashboardDatatable from '@/components/Dashboard/DashboardDatatable.vue';
 import DashboardNoLinksYet from '@/components/Dashboard/DashboardNoLinksYet.vue';
 import BaseModal from '@/components/Base/BaseModal.vue';
 import NewLinkForm from '@/components/Forms/NewLinkForm.vue';
+import EditLinkForm from '@/components/Forms/EditLinkForm.vue';
 import { ref, onBeforeMount } from 'vue';
 
 import { useUserStore } from '@/stores/user';
@@ -11,6 +12,7 @@ import { useLinksStore } from '@/stores/links';
 
 const searchValue = ref('');
 const isAddLinkOpen = ref(false);
+const editLinkData = ref(null);
 const { user } = useUserStore();
 const { links, fetchMyLinks } = useLinksStore();
 onBeforeMount(() => {
@@ -22,11 +24,14 @@ onBeforeMount(() => {
   <main class="layout">
     <DashboardCTA :title="`Welcome ${user!.fullname}!`" description="Shorten to your heart's content! Unlimited. "
       class="mb-10" />
-    <DashboardDatatable v-if="links?.length" @openAddLinkModal="isAddLinkOpen = true" />
+    <DashboardDatatable v-if="links?.length" @openAddLinkModal="isAddLinkOpen = true" @openEditLinkModal="editLinkData = $event" />
     <DashboardNoLinksYet v-else @openAddLinkModal="isAddLinkOpen = true" />
     <Teleport to="body">
       <BaseModal v-if="isAddLinkOpen" @close="isAddLinkOpen = false">
         <NewLinkForm @close="isAddLinkOpen = false" />
+      </BaseModal>
+      <BaseModal v-if="editLinkData" @close="editLinkData = null">
+        <EditLinkForm :link="editLinkData" @close="editLinkData = null" />
       </BaseModal>
     </Teleport>
   </main>
