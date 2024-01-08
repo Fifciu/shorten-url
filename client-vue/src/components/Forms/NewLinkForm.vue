@@ -13,7 +13,7 @@ const formData = reactive({
   name: '',
   alias: ''
 });
-const { links, addNewLink } = useLinksStore();
+const { addNewLink } = useLinksStore();
 async function onSubmit() {
   await addNewLink(formData.name, formData.original_url, formData.alias);
   emit('close');

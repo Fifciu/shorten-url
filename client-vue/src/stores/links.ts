@@ -1,7 +1,7 @@
 import { reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { linksService } from '@/services/links';
-import type { Link } from '@/services/links';
+import type { Link, UpdateLinkDto } from '@/services/links';
 
 export const useLinksStore = defineStore('links', () => {
   const links = reactive<Link[]>([]);
@@ -32,11 +32,21 @@ export const useLinksStore = defineStore('links', () => {
     }
   }
 
+  async function updateLink(linkId: number, dto: UpdateLinkDto) {
+    try {
+      const link = await linksService.update(linkId, dto);
+      links.splice(links.findIndex(link => link.id === linkId), 1, link);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return {
     links,
     fetchMyLinks,
     addNewLink,
-    deleteLink
+    deleteLink,
+    updateLink
   }
 })
 

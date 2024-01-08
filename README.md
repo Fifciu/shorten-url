@@ -49,3 +49,5 @@ Backlog:
 - [ ] Counting views
 - [ ] add linter (go)
 - [ ] add db migrations on launch
+- [ ] Wishlist
+- [ ] SSO

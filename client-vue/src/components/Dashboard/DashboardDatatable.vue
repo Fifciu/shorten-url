@@ -1,50 +1,62 @@
 <script setup lang="ts">
-import BaseInput from '@/components/Base/BaseInput.vue';
+import BaseSearch from '@/components/Base/BaseSearch.vue';
 import BaseButton from '@/components/Base/BaseButton.vue';
 import MobileDashboardLink from '@/components/Dashboard/MobileDashboardLink.vue';
 import CopyButton from '@/components/Actions/CopyButton.vue';
 import EditButton from '@/components/Actions/EditButton.vue';
 import WishlistButton from '@/components/Actions/WishlistButton.vue';
 import BinButton from '@/components/Actions/BinButton.vue';
-import { defineEmits, ref } from 'vue';
+import { computed, defineEmits, ref } from 'vue';
 
-import { useUserStore } from '@/stores/user';
+import { useUiStore } from '@/stores/ui';
 import { useLinksStore } from '@/stores/links';
 
 import { REDIRECT_BASE_URL } from '@/const';
+import type { Link } from '@/services/links';
 
-const { user } = useUserStore();
+const uiStore = useUiStore();
+
 const emit = defineEmits<{
-  (e: 'openAddLinkModal'): void
+  (e: 'openAddLinkModal'): void,
+  (e: 'openEditLinkModal', link: Link): void, // Is it proper type? TODO
 }>();
 
-const searchValue = ref('');
-
 const { links } = useLinksStore();
+const filteredLinks = computed(() => {
+  if (!uiStore.searchQuery) {
+    return links;
+  }
+  const searchQueryLowerCased = uiStore.searchQuery.toLocaleLowerCase();
+  return links.filter(link => 
+    link.name.toLocaleLowerCase().match(searchQueryLowerCased)
+    || link.alias.toLocaleLowerCase().match(searchQueryLowerCased)
+    || link.original_url.toLowerCase().match(searchQueryLowerCased)
+  );
+});
 </script>
 
 <template>
   <div class="datatable-desktop">
     <div class="actions">
-      <BaseInput uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" label-style="dark-grey" placeholder="Search"
-        v-model="searchValue" />
+      <BaseSearch uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" label-style="dark-grey" placeholder="Search"
+        v-model="uiStore.searchQuery" />
       <button>Sort By</button>
       <BaseButton variant="primary" @click="emit('openAddLinkModal')">New link</BaseButton>
     </div>
-    <table class="content" v-if="links.length">
+    <table class="content" v-if="filteredLinks.length">
       <tr class="headers">
         <th>Name</th>
         <th>Updated at</th>
         <th>Short link</th>
         <th></th>
       </tr>
-      <tr class="records" v-for="record in links" :key="record.id">
+      <tr class="records" v-for="record in filteredLinks" :key="record.id">
         <td class="name">{{ record.name }}</td>
         <td class="date">{{ record.updated_at }}</td>
         <td class="link">{{ REDIRECT_BASE_URL }}{{ record.alias }}</td>
         <td class="actions">
           <CopyButton :toCopy="REDIRECT_BASE_URL + record.alias" />
-          <EditButton :linkId="record.id" />
+          <EditButton @click="emit('openEditLinkModal', record)" />
           <BinButton :linkId="record.id" />
           <WishlistButton :linkId="record.id" />
         </td>
@@ -57,8 +69,8 @@ const { links } = useLinksStore();
       <button class="sort-by--mobile">Sort By</button>
     </div>
     <div class="content px-2">
-      <MobileDashboardLink v-for="record in links" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
-        :updated_at="record.updated_at" />
+      <MobileDashboardLink v-for="record in filteredLinks" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
+        :updated_at="record.updated_at" @edit="emit('openEditLinkModal', record)"/>
     </div>
   </div>
 </template>

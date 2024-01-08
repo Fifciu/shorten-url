@@ -15,19 +15,30 @@ const props = defineProps({
     type: String,
     required: false
   },
-  modelValue: String
+  modelValue: String,
+  onClick: {
+    type: Function,
+    required: false
+  }
 });
 
 const isPasswordVisible = ref(false);
 </script>
 
 <template>
+  <!-- TODO: POSSIBLE TO MERGE WITH BASE PASSWORD AND MODAL -->
+  <!-- TODO: POSSIBLE TO PUT IN ON BOTH SIDE OF THE INPUT -->
   <div class="input-wrapper">
     <label v-if="props.label" class="input-label" :for="props.uniqueId">{{ label }}</label>
     <div class="input-subwrapper">
-      <input :type="isPasswordVisible ? 'text' : 'password'" class="input" :id="props.uniqueId" :placeholder="props.placeholder" :value="props.modelValue"
+      <div class="search-icon-wrapper" v-if="!props.onClick">
+        <img src="@/assets/search.svg" />
+      </div>
+      <button class="search-icon-wrapper" type="button" v-else>
+        <img src="@/assets/search.svg" />
+      </button>
+      <input type="search" class="input" :id="props.uniqueId" :placeholder="props.placeholder" :value="props.modelValue"
       @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
-      <button type="button" class="btn-toggle-password" @click="isPasswordVisible = !isPasswordVisible"><img src="@/assets/show-password.svg" v-show="!isPasswordVisible" /><img src="@/assets/hide-password.svg" v-show="isPasswordVisible" /></button>
     </div>
   </div>
 </template>
@@ -39,12 +50,13 @@ const isPasswordVisible = ref(false);
   font-style: normal;
   font-weight: 400;
   padding: 16px;
+  padding-left: 0;
   height: 48px;
   border-radius: 8px;
   border: 2px solid $colorLightGrey;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-right-width: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-width: 0;
   width: 100%;
 
   &::placeholder {
@@ -52,10 +64,14 @@ const isPasswordVisible = ref(false);
   }
 
   &-label {
-    color: $colorBlue;
+    color: $colorDarkGrey;
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 4px;
+    font-family: Source Sans Pro;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 21px */
   }
 
   &-wrapper {
@@ -63,23 +79,25 @@ const isPasswordVisible = ref(false);
     // flex-wrap: wrap;
     // width: 100%;
     // overflow: hidden;
-
   }
 
   &-subwrapper {
     width: 100%;
     display: flex;
+    margin-top: 4px;
   }
 }
 
-.btn-toggle-password {
+.search-icon-wrapper {
   padding: 0 16px;
   height: 48px;
   border-radius: 8px;
   border: 2px solid $colorLightGrey;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-left-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right-width: 0;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -1,5 +1,5 @@
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, defineProps, defineEmits } from 'vue';
 import { REDIRECT_BASE_URL } from '@/const';
 import CopyButton from '@/components/Actions/CopyButton.vue';
 import EditButton from '@/components/Actions/EditButton.vue';
@@ -12,6 +12,9 @@ const props = defineProps({
   short_link: String,
   updated_at: String,
 });
+const emit = defineEmits<{
+  (e: 'edit'): void, // Is it proper type? TODO
+}>();
 
 const isOpen = ref(false);
 function openIfClosed() {
@@ -53,7 +56,7 @@ function toggle() {
       <div class="item-label">Actions</div>
       <div class="item-actions">
         <CopyButton :toCopy="REDIRECT_BASE_URL + props.short_link" />
-        <EditButton class="mx-2" :linkId="props.id" />
+        <EditButton class="mx-2" @click="emit('edit')" />
         <BinButton class="mr-2" :linkId="props.id" />
         <WishlistButton :linkId="props.id" />
       </div>

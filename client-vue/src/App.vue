@@ -11,6 +11,8 @@ const formData = reactive({
   password: ''
 });
 
+//TODO: Token expired handling
+
 const userStore = useUserStore();
 const layout = shallowRef('div');
 

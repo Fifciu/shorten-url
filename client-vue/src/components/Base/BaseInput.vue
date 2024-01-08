@@ -29,7 +29,7 @@ const props = defineProps({
 <template>
   <div class="input-wrapper">
     <label v-if="props.label" :class="['input-label', props.labelStyle === 'black' && 'input-label--black', props.labelStyle === 'dark-grey' && 'input-label--dark-grey']" :for="props.uniqueId">{{ label }}</label>
-    <input class="input" :id="props.uniqueId" :placeholder="props.placeholder" :model-value="props.value" @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
+    <input class="input" :id="props.uniqueId" :placeholder="props.placeholder" :value="props.modelValue" @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
   </div>
 </template>
 

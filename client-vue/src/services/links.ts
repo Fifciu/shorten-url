@@ -42,8 +42,8 @@ export const linksService = {
   },
 
   async update(id: number, updateLinkDto: UpdateLinkDto) {
-    await sendToApiExpectBody<Link>(`${MODULE_BASE_PATH}/${id}`, {
-      method: 'POST',
+    return await sendToApiExpectBody<Link>(`${MODULE_BASE_PATH}/${id}`, {
+      method: 'PATCH',
       body: JSON.stringify(updateLinkDto)
     });
   },
