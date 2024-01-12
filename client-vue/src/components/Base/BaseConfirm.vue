@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { defineEmits } from 'vue';
 
+const props = defineProps({
+  question: string
+});
+
 const emit = defineEmits<{
   (e: 'close'): void
 }>();
@@ -9,11 +13,12 @@ const emit = defineEmits<{
 <template>
   <div class="modal" @click="emit('close')">
     <div class="dialog" @click.stop>
-      <div class="wrapper">
-        <button class="dialog-close-btn" @click="emit('close')">
-          <img src="@/assets/close.svg" alt="Close button" />
-        </button>
+      <div class="question">
         <slot></slot>
+      </div>
+      <div class="actions">
+        <BaseButton variant="secondary" @click="emit('close')">No</BaseButton>
+        <BaseButton variant="primary" @click="emit('close')">Yes</BaseButton>
       </div>
     </div>
   </div>

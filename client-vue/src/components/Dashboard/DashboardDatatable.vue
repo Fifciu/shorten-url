@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import BaseSelect from '@/components/Base/BaseSelect.vue';
 import BaseSearch from '@/components/Base/BaseSearch.vue';
 import BaseButton from '@/components/Base/BaseButton.vue';
 import MobileDashboardLink from '@/components/Dashboard/MobileDashboardLink.vue';
+import MobileSortBy from '@/components/Dashboard/MobileSortBy.vue';
 import CopyButton from '@/components/Actions/CopyButton.vue';
 import EditButton from '@/components/Actions/EditButton.vue';
 import WishlistButton from '@/components/Actions/WishlistButton.vue';
@@ -33,6 +35,23 @@ const filteredLinks = computed(() => {
     || link.original_url.toLowerCase().match(searchQueryLowerCased)
   );
 });
+
+const sortedFilterLinks = computed(() => {
+  return [...filteredLinks.value].sort((a, b) => {
+    switch(uiStore.sortBy) {
+      case 'updatedAt':
+        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
+      case 'updatedAt:desc':
+        return Date.parse(a.updated_at) - Date.parse(b.updated_at);
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'name:desc':
+        return b.name.localeCompare(a.name);
+      default:
+        return 0;
+    }
+  });
+});
 </script>
 
 <template>
@@ -40,17 +59,17 @@ const filteredLinks = computed(() => {
     <div class="actions">
       <BaseSearch uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" label-style="dark-grey" placeholder="Search"
         v-model="uiStore.searchQuery" />
-      <button>Sort By</button>
+      <BaseSelect v-model="uiStore.sortBy" :fields="uiStore.SORT_OPTIONS" />
       <BaseButton variant="primary" @click="emit('openAddLinkModal')">New link</BaseButton>
     </div>
-    <table class="content" v-if="filteredLinks.length">
+    <table class="content" v-if="sortedFilterLinks.length">
       <tr class="headers">
         <th>Name</th>
         <th>Updated at</th>
         <th>Short link</th>
         <th></th>
       </tr>
-      <tr class="records" v-for="record in filteredLinks" :key="record.id">
+      <tr class="records" v-for="record in sortedFilterLinks" :key="record.id">
         <td class="name">{{ record.name }}</td>
         <td class="date">{{ record.updated_at }}</td>
         <td class="link">{{ REDIRECT_BASE_URL }}{{ record.alias }}</td>
@@ -66,11 +85,11 @@ const filteredLinks = computed(() => {
   <div class="datatable-mobile">
     <div class="actions px-2">
       <BaseButton variant="primary" class="w-100" @click="emit('openAddLinkModal')">New link</BaseButton>
-      <button class="sort-by--mobile">Sort By</button>
+      <MobileSortBy />
     </div>
     <div class="content px-2">
-      <MobileDashboardLink v-for="record in filteredLinks" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
-        :updated_at="record.updated_at" @edit="emit('openEditLinkModal', record)"/>
+      <MobileDashboardLink v-for="record in sortedFilterLinks" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
+        :updated_at="record.updated_at" @edit="emit('openEditLinkModal', record)" />
     </div>
   </div>
 </template>

@@ -53,11 +53,16 @@ const isPasswordVisible = ref(false);
   padding-left: 0;
   height: 48px;
   border-radius: 8px;
-  border: 2px solid $colorLightGrey;
+  border: 2px solid $colorWhiteGrey2;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left-width: 0;
   width: 100%;
+
+  &:focus {
+    border: 2px solid $colorLightGrey;
+    border-left-width: 0;
+  }
 
   &::placeholder {
     color: $colorLightGrey;
@@ -92,12 +97,17 @@ const isPasswordVisible = ref(false);
   padding: 0 16px;
   height: 48px;
   border-radius: 8px;
-  border: 2px solid $colorLightGrey;
+  border: 2px solid $colorWhiteGrey2;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right-width: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
+}
+
+.search-icon-wrapper:has(+ .input:focus) {
+  border: 2px solid $colorLightGrey;
+  border-right-width: 0;
 }
 </style>

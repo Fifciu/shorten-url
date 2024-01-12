@@ -1,0 +1,11 @@
+input[type="radio"] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  appearance: none;
+  /* For iOS < 15 to remove gradient background */
+  background-color: #fff;
+}
+
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;

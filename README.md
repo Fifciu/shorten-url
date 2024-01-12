@@ -51,3 +51,4 @@ Backlog:
 - [ ] add db migrations on launch
 - [ ] Wishlist
 - [ ] SSO
+- [ ] Bugfix: Just added link is wrongly sorted by date
