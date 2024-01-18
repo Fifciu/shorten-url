@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LandingHeader from '@/components/Landing/LandingHeader.vue';
+import LandingFooter from '@/components/Landing/LandingFooter.vue';
 </script>
 
 <template>
@@ -7,6 +8,7 @@ import LandingHeader from '@/components/Landing/LandingHeader.vue';
     <LandingHeader class="header" />
     <slot></slot>
   </main>
+  <LandingFooter />
 </template>
 
 <style lang="scss" scoped>

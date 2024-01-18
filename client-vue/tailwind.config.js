@@ -1,6 +1,6 @@
 const buildValuesForUnit = (base, unit, amount) => {
   const obj = {};
-  for (let i = 1; i <= amount; i++) {
+  for (let i = 0; i <= amount; i++) {
     obj[i+''] = `${base * i}${unit}`;
   }
   return obj
