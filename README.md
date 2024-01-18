@@ -52,3 +52,4 @@ Backlog:
 - [ ] Wishlist
 - [ ] SSO
 - [ ] Bugfix: Just added link is wrongly sorted by date
+- [ ] Bugfix: Width of no links yet is different than table of links

@@ -4,6 +4,7 @@ import BaseSearch from '@/components/Base/BaseSearch.vue';
 import BaseButton from '@/components/Base/BaseButton.vue';
 import MobileDashboardLink from '@/components/Dashboard/MobileDashboardLink.vue';
 import MobileSortBy from '@/components/Dashboard/MobileSortBy.vue';
+import DashboardNoLinksMatchingCriteria from '@/components/Dashboard/DashboardNoLinksMatchingCriteria.vue';
 import CopyButton from '@/components/Actions/CopyButton.vue';
 import EditButton from '@/components/Actions/EditButton.vue';
 import WishlistButton from '@/components/Actions/WishlistButton.vue';
@@ -87,11 +88,12 @@ const sortedFilterLinks = computed(() => {
       <BaseButton variant="primary" class="w-100" @click="emit('openAddLinkModal')">New link</BaseButton>
       <MobileSortBy />
     </div>
-    <div class="content px-2">
+    <div class="content px-2" v-if="sortedFilterLinks.length">
       <MobileDashboardLink v-for="record in sortedFilterLinks" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
         :updated_at="record.updated_at" @edit="emit('openEditLinkModal', record)" />
     </div>
   </div>
+  <DashboardNoLinksMatchingCriteria v-if="!sortedFilterLinks.length" class="mt-9 md:mt-2" />
 </template>
 
 <style lang="scss" scoped>

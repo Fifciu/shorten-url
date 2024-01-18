@@ -95,4 +95,5 @@ input[type="radio"] {
   /* For iOS < 15 to remove gradient background */
   background-color: #fff;
 }
+
 </style>
