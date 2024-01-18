@@ -58,6 +58,7 @@ const isPasswordVisible = ref(false);
   border-bottom-left-radius: 0;
   border-left-width: 0;
   width: 100%;
+  transition: all $transitionTime;
 
   &:focus {
     border: 2px solid $colorLightGrey;
@@ -104,10 +105,20 @@ const isPasswordVisible = ref(false);
   cursor: pointer;
   display: flex;
   align-items: center;
+  transition: all $transitionTime;
+
+  img {
+    opacity: .3;
+    transition: all $transitionTime;
+  }
 }
 
 .search-icon-wrapper:has(+ .input:focus) {
   border: 2px solid $colorLightGrey;
   border-right-width: 0;
+
+  img {
+    opacity: 1;
+  }
 }
 </style>
