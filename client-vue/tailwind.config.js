@@ -12,6 +12,11 @@ export default {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     spacing: buildValuesForUnit(8, 'px', 30),
+    screens: {
+      'md': '550px',
+      'lg': '1100px',
+      'xl': '1500px',
+    },
     extend: {},
   },
   plugins: [],
