@@ -10,20 +10,31 @@ services:
     #   - "host.docker.internal:host-gateway"
     ports:
       - "80:80"
-  
-  postgres:
-    image: postgres:14-alpine
+
+  postgres16:
+    image: postgres
+    restart: always
     ports:
       - 5432:5432
     volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
+      - ~/apps/postgres:/var/lib/postgresql16/data
     environment:
       - POSTGRES_PASSWORD=zaq1@WSX
       - POSTGRES_USER=user
       - POSTGRES_DB=shortenurl
+      - POSTGRES_INITDB_ARGS="-E 'UTF-8' --lc-collate='en-US-x-icu' --lc-ctype='en-US-x-icu'"
 
-  adminer:
-    image: adminer
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: postgres16
     restart: always
     ports:
-      - 8080:8080
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: strong-password
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  pgadmin-data:

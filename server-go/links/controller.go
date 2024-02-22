@@ -131,8 +131,17 @@ func GetMyLinks(validate *validator.Validate, model LinksModel) http.HandlerFunc
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		values := r.Context().Value("claims").(*authentication.Claims)
 		userId := values.UserClaims.ID
+		sort := r.URL.Query().Get("sortBy")
+		if sort == "" {
+			sort = "updated_at"
+		}
 
-		links, err := model.GetLinksOfUser(userId)
+		direction := r.URL.Query().Get("direction")
+		if direction == "" {
+			direction = "desc"
+		}
+
+		links, err := model.GetLinksOfUser(userId, sort, direction)
 		if err != nil {
 			log.Error(fmt.Sprintf("controller/links/GetMyLinks/fetching user's links: %s", err.Error()))
 			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))

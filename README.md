@@ -31,6 +31,7 @@ v0.0.3:
 - [ ] refactor (tidy auth/user controllers)
 - [ ] fix controller tests
 - [x] create TS Client
+- [x] Bug: Fix sorting by ASCII code to alphabetical sort (collation)
 - [ ] write e2e tests in ts client
 - [ ] create client project
 - [ ] sign up
@@ -53,3 +54,6 @@ Backlog:
 - [ ] SSO
 - [ ] Bugfix: Just added link is wrongly sorted by date
 - [ ] Bugfix: Width of no links yet is different than table of links
+- [ ] Bugfix: Use scoped styles in layouts' headers
+- [ ] Refactor: Map font size to rem
+- [ ] a11y: Focus trap for modals
