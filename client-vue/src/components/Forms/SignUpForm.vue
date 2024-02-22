@@ -13,11 +13,11 @@ const formData = reactive({
   password: ''
 });
 const router = useRouter();
-const { login } = useUserStore();
+const { register } = useUserStore();
 
 const onSubmit = async event => {
   try {
-    await login(formData.fullname, formData.email, formData.password);
+    await register(formData.fullname, formData.email, formData.password);
     router.push('/dashboard');
   } catch (err) {
     console.error(err);
