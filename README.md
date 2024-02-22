@@ -34,15 +34,15 @@ v0.0.3:
 - [x] Bug: Fix sorting by ASCII code to alphabetical sort (collation)
 - [ ] write e2e tests in ts client
 - [ ] create client project
-- [ ] sign up
-- [ ] sign in
+- [x] sign up
+- [x] sign in
 - [ ] sign out
-- [ ] user can shorten URL
-- [ ] user can shorten URL with custom alias
+- [x] user can shorten URL
+- [x] user can shorten URL with custom alias
 - [ ] user can shorten an URL with custom expiry date, lower or equal 5 years,
-- [ ] user can list his links
-- [ ] user can remove his links
-- [ ] user can update his links
+- [x] user can list his links
+- [x] user can remove his links
+- [x] user can update his links
 
 Backlog:
 
