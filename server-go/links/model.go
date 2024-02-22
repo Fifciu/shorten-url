@@ -143,16 +143,13 @@ func (p *PostgresLinkModel) DeleteLink(linkId uint) error {
 	return nil
 }
 
-func (p *PostgresLinkModel) GetLinksOfUser(userId uint, sort string, direction string) ([]*Link, error) {
+func (p *PostgresLinkModel) GetLinksOfUser(userId uint, sort string, sortDirection string) ([]*Link, error) {
 	if sort != "updated_at" && sort != "name" {
 		return nil, errors.New(http.StatusText(http.StatusBadRequest))
 	}
-	sortDir := "DESC"
-	if direction == "asc" {
-		sortDir = "ASC"
-	}
-	fmt.Printf("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1 ORDER BY %s %s", sort, sortDir)
-	rows, err := p.Db.Query(fmt.Sprintf("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1 ORDER BY %s %s", sort, sortDir), userId)
+
+	fmt.Printf("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1 ORDER BY %s %s", sort, sortDirection)
+	rows, err := p.Db.Query(fmt.Sprintf("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1 ORDER BY %s %s", sort, sortDirection), userId)
 	if err != nil {
 		return nil, err
 	}
