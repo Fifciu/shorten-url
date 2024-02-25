@@ -131,6 +131,17 @@ func GetMyLinks(validate *validator.Validate, model LinksModel) http.HandlerFunc
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		values := r.Context().Value("claims").(*authentication.Claims)
 		userId := values.UserClaims.ID
+		page, err := strconv.Atoi(r.URL.Query().Get("page"))
+		if err != nil {
+			log.Error(fmt.Sprintf("controller/links/GetMyLinks/converting page query param to uint: %s", err.Error()))
+			utils.JsonErrorResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+			return
+		}
+		if page < 1 {
+			log.Error(fmt.Sprintf("controller/links/GetMyLinks/too small value for page: %d, minimum is: %d", page, 1))
+			utils.JsonErrorResponse(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+			return
+		}
 		sortQueryParam := r.URL.Query().Get("sortBy")
 		sortBy, direction, forbiddenField := utils.SortQueryParamToValues(sortQueryParam, []string{
 			"updated_at", "name",
@@ -142,7 +153,7 @@ func GetMyLinks(validate *validator.Validate, model LinksModel) http.HandlerFunc
 			return
 		}
 
-		links, err := model.GetLinksOfUser(userId, sortBy, direction)
+		links, err := model.GetLinksOfUser(userId, sortBy, direction, uint(page))
 		if err != nil {
 			log.Error(fmt.Sprintf("controller/links/GetMyLinks/fetching user's links: %s", err.Error()))
 			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))

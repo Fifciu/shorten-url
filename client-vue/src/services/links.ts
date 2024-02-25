@@ -11,6 +11,14 @@ export type Link = {
   alias: string,
 };
 
+export type PaginatedLinks = {
+  count: number,
+  per_page: number,
+  page: number,
+  page_amount: number,
+  links: Link[],
+}
+
 export type UpdateLinkDto = {
   name?: string,
   original_url?: string,
@@ -35,8 +43,12 @@ export const linksService = {
     });
   },
 
-  async getMyMany() {
-    return await sendToApiExpectBody<Link[]>(`${MODULE_BASE_PATH}/`, {
+  async getMyMany(page = 1, sortBy?: string) {
+    let url = `${MODULE_BASE_PATH}/?page=${page}`;
+    if (sortBy) {
+      url += `&sortBy=${sortBy}`
+    }
+    return await sendToApiExpectBody<PaginatedLinks>(url, {
       method: 'GET'
     });
   },

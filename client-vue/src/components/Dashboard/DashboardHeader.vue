@@ -2,7 +2,7 @@
 import BaseButton from '@/components/Base/BaseButton.vue';
 import BaseSearchMobile from '@/components/Base/BaseSearchMobile.vue';
 import { ref } from 'vue';
-import { useUiStore } from '@/stores/ui';
+import { useLinksStore } from '@/stores/links';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 import routerInstance from '@/router';
@@ -10,7 +10,7 @@ import routerInstance from '@/router';
 const showedMobileMenu = ref(false);
 const showedDesktopSubmenu = ref(false);
 const showedMobileSearchBar = ref(false);
-const uiStore = useUiStore();
+const linkStore = useLinksStore();
 const { user, logout } = useUserStore();
 const router = useRouter();
 
@@ -36,7 +36,7 @@ const onClickLogout = async () => {
         @click="showedMobileSearchBar = !showedMobileSearchBar">
         <img src="@/assets/search.svg" alt="Search button" />
       </button>
-      <BaseSearchMobile wrapperClasses="header__search-input mr-2" v-model="uiStore.searchQuery"
+      <BaseSearchMobile wrapperClasses="header__search-input mr-2" v-model="linkStore.searchQuery"
         @click="showedMobileSearchBar = !showedMobileSearchBar" v-show="showedMobileSearchBar" />
       <button class="header__hamburger" @click="showedMobileMenu = true">
         <img src="@/assets/hamburger.svg" alt="Hamburger button" />
@@ -44,7 +44,7 @@ const onClickLogout = async () => {
       <div class="submenu-wrapper">
         <ul class="desktop-menu__cta-list">
           <li class="desktop-menu__cta-list-item">
-            {{ user.fullname }}
+            {{ user?.fullname }}
           </li>
           <li class="desktop-menu__cta-list-item">
             <!-- TODO: Make it button? -->

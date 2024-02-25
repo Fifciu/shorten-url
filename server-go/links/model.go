@@ -18,6 +18,8 @@ const (
 	JWT_KEY = "some-random-zaq1@WSX"
 )
 
+const PER_PAGE = 2
+
 type Link struct {
 	ID          uint      `json:"id"`
 	UserId      uint      `json:"user_id" validate:"required"`
@@ -27,6 +29,14 @@ type Link struct {
 	Alias       string    `json:"alias" validate:""` // TODO: add better validation
 }
 
+type PaginatedLinks struct {
+	Count      uint    `json:"count"`
+	PerPage    uint    `json:"per_page"`
+	Page       uint    `json:"page"`
+	PageAmount uint    `json:"page_amount"`
+	Links      []*Link `json:"links"`
+}
+
 type LinksModel interface {
 	CreateLink(c CreateLinkDto) (*Link, error)
 	BuildAlias(finalLen int) (string, error)
@@ -34,7 +44,7 @@ type LinksModel interface {
 	FindLinkByAlias(alias string) (*Link, error)
 	IsLinkOwner(userId uint, linkId uint) (bool, error)
 	DeleteLink(linkId uint) error
-	GetLinksOfUser(userId uint, sort string, direction string) ([]*Link, error)
+	GetLinksOfUser(userId uint, sort string, direction string, page uint) (*PaginatedLinks, error)
 	UserUsedLinkName(linkName string, userId uint) (bool, error)
 	UpdateLink(linkId, userId uint, body UpdateLinkDto) (*Link, error)
 }
@@ -143,13 +153,23 @@ func (p *PostgresLinkModel) DeleteLink(linkId uint) error {
 	return nil
 }
 
-func (p *PostgresLinkModel) GetLinksOfUser(userId uint, sort string, sortDirection string) ([]*Link, error) {
+func (p *PostgresLinkModel) GetLinksOfUser(userId uint, sort string, sortDirection string, page uint) (*PaginatedLinks, error) {
 	if sort != "updated_at" && sort != "name" {
 		return nil, errors.New(http.StatusText(http.StatusBadRequest))
 	}
 
-	fmt.Printf("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1 ORDER BY %s %s", sort, sortDirection)
-	rows, err := p.Db.Query(fmt.Sprintf("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1 ORDER BY %s %s", sort, sortDirection), userId)
+	var count int
+	err := p.Db.QueryRow("SELECT COUNT(*) FROM links WHERE user_id = $1", userId).Scan(&count)
+	if err != nil {
+		return nil, err
+	}
+
+	pageAmount := uint(math.Ceil(float64(count) / float64(PER_PAGE)))
+	if page > pageAmount {
+		return nil, errors.New(http.StatusText(http.StatusBadRequest))
+	}
+	offset := (page - 1) * PER_PAGE
+	rows, err := p.Db.Query(fmt.Sprintf("SELECT id, name, original_url, updated_at, alias FROM links WHERE user_id = $1 ORDER BY %s %s LIMIT %d OFFSET %d", sort, sortDirection, PER_PAGE, offset), userId)
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +185,13 @@ func (p *PostgresLinkModel) GetLinksOfUser(userId uint, sort string, sortDirecti
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	return links, nil
+	return &PaginatedLinks{
+		Count:      uint(count),
+		Page:       page,
+		PerPage:    PER_PAGE,
+		PageAmount: pageAmount,
+		Links:      links,
+	}, nil
 }
 
 func (p *PostgresLinkModel) UpdateLink(linkId, userId uint, body UpdateLinkDto) (*Link, error) {

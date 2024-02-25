@@ -9,49 +9,31 @@ import CopyButton from '@/components/Actions/CopyButton.vue';
 import EditButton from '@/components/Actions/EditButton.vue';
 import WishlistButton from '@/components/Actions/WishlistButton.vue';
 import BinButton from '@/components/Actions/BinButton.vue';
-import { computed, defineEmits, ref } from 'vue';
+import { computed, defineEmits } from 'vue';
 
-import { useUiStore } from '@/stores/ui';
 import { useLinksStore } from '@/stores/links';
 
 import { REDIRECT_BASE_URL } from '@/const';
 import type { Link } from '@/services/links';
-
-const uiStore = useUiStore();
+import { storeToRefs } from 'pinia';
 
 const emit = defineEmits<{
   (e: 'openAddLinkModal'): void,
   (e: 'openEditLinkModal', link: Link): void, // Is it proper type? TODO
 }>();
 
-const { links } = useLinksStore();
+const { links, SORT_OPTIONS } = useLinksStore();
+const { sortBy, searchQuery } = storeToRefs(useLinksStore())
 const filteredLinks = computed(() => {
-  if (!uiStore.searchQuery) {
+  if (!searchQuery) {
     return links;
   }
-  const searchQueryLowerCased = uiStore.searchQuery.toLocaleLowerCase();
+  const searchQueryLowerCased = (''+searchQuery).toLocaleLowerCase();
   return links.filter(link => 
     link.name.toLocaleLowerCase().match(searchQueryLowerCased)
     || link.alias.toLocaleLowerCase().match(searchQueryLowerCased)
     || link.original_url.toLowerCase().match(searchQueryLowerCased)
   );
-});
-
-const sortedFilterLinks = computed(() => {
-  return [...filteredLinks.value].sort((a, b) => {
-    switch(uiStore.sortBy) {
-      case 'updatedAt':
-        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
-      case 'updatedAt:desc':
-        return Date.parse(a.updated_at) - Date.parse(b.updated_at);
-      case 'name':
-        return a.name.localeCompare(b.name);
-      case 'name:desc':
-        return b.name.localeCompare(a.name);
-      default:
-        return 0;
-    }
-  });
 });
 </script>
 
@@ -59,18 +41,18 @@ const sortedFilterLinks = computed(() => {
   <div class="datatable-desktop">
     <div class="actions">
       <BaseSearch uniqueId="filterLinksByTextDesktop" type="search" label="Your Links" label-style="dark-grey" placeholder="Search"
-        v-model="uiStore.searchQuery" />
-      <BaseSelect v-model="uiStore.sortBy" :fields="uiStore.SORT_OPTIONS" />
+        v-model="searchQuery" />
+      <BaseSelect v-model="sortBy" :fields="SORT_OPTIONS" />
       <BaseButton variant="primary" @click="emit('openAddLinkModal')">New link</BaseButton>
     </div>
-    <table class="content" v-if="sortedFilterLinks.length">
+    <table class="content" v-if="filteredLinks.length">
       <tr class="headers">
         <th>Name</th>
         <th>Updated at</th>
         <th>Short link</th>
         <th></th>
       </tr>
-      <tr class="records" v-for="record in sortedFilterLinks" :key="record.id">
+      <tr class="records" v-for="record in filteredLinks" :key="record.id">
         <td class="name">{{ record.name }}</td>
         <td class="date">{{ record.updated_at }}</td>
         <td class="link">{{ REDIRECT_BASE_URL }}{{ record.alias }}</td>
@@ -88,12 +70,12 @@ const sortedFilterLinks = computed(() => {
       <BaseButton variant="primary" class="w-100" @click="emit('openAddLinkModal')">New link</BaseButton>
       <MobileSortBy />
     </div>
-    <div class="content px-2" v-if="sortedFilterLinks.length">
-      <MobileDashboardLink v-for="record in sortedFilterLinks" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
+    <div class="content px-2" v-if="filteredLinks.length">
+      <MobileDashboardLink v-for="record in filteredLinks" :key="record.id" :id="record.id" :name="record.name" :short_link="record.alias"
         :updated_at="record.updated_at" @edit="emit('openEditLinkModal', record)" />
     </div>
   </div>
-  <DashboardNoLinksMatchingCriteria v-if="!sortedFilterLinks.length" class="mt-9 md:mt-2" />
+  <DashboardNoLinksMatchingCriteria v-if="!filteredLinks.length" class="mt-9 md:mt-2" />
 </template>
 
 <style lang="scss" scoped>

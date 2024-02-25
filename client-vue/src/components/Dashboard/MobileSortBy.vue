@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import BaseRadio from '@/components/Base/BaseRadio.vue';
-import { useUiStore } from '@/stores/ui';
+import { useLinksStore } from '@/stores/links';
 
-const uiStore = useUiStore();
+const { SORT_OPTIONS, sortBy } = useLinksStore();
 const isOpen = ref(false);
 </script>
 
@@ -14,7 +14,7 @@ const isOpen = ref(false);
       <img src="@/assets/dropdown.svg" />
     </div>
     <div class="py-2" v-if="isOpen">
-      <BaseRadio uniqueId="mobile-dashboard-sort" :fields="uiStore.SORT_OPTIONS" v-model="uiStore.sortBy" />
+      <BaseRadio uniqueId="mobile-dashboard-sort" :fields="SORT_OPTIONS" v-model="sortBy" />
     </div>
   </div>
 </template>
