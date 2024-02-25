@@ -18,7 +18,7 @@ const (
 	JWT_KEY = "some-random-zaq1@WSX"
 )
 
-const PER_PAGE = 2
+const PER_PAGE = 12
 
 type Link struct {
 	ID          uint      `json:"id"`
@@ -164,7 +164,18 @@ func (p *PostgresLinkModel) GetLinksOfUser(userId uint, sort string, sortDirecti
 		return nil, err
 	}
 
+	links := make([]*Link, 0) // TODO: Can I extract rows amount from query?
+
 	pageAmount := uint(math.Ceil(float64(count) / float64(PER_PAGE)))
+	if pageAmount == 0 {
+		return &PaginatedLinks{
+			Count:      0,
+			PerPage:    PER_PAGE,
+			Page:       uint(1),
+			PageAmount: uint(0),
+			Links:      links,
+		}, nil
+	}
 	if page > pageAmount {
 		return nil, errors.New(http.StatusText(http.StatusBadRequest))
 	}
@@ -174,7 +185,6 @@ func (p *PostgresLinkModel) GetLinksOfUser(userId uint, sort string, sortDirecti
 		return nil, err
 	}
 	defer rows.Close()
-	links := make([]*Link, 0) // TODO: Can I extract rows amount from query?
 	for rows.Next() {
 		link := &Link{}
 		if err := rows.Scan(&link.ID, &link.Name, &link.OriginalUrl, &link.UpdatedAt, &link.Alias); err != nil {

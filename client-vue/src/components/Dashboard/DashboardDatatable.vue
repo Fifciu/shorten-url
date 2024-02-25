@@ -9,6 +9,7 @@ import CopyButton from '@/components/Actions/CopyButton.vue';
 import EditButton from '@/components/Actions/EditButton.vue';
 import WishlistButton from '@/components/Actions/WishlistButton.vue';
 import BinButton from '@/components/Actions/BinButton.vue';
+import DashboardLoadMore from '@/components/Dashboard/DashboardLoadMore.vue';
 import { computed, defineEmits } from 'vue';
 
 import { useLinksStore } from '@/stores/links';
@@ -75,6 +76,7 @@ const filteredLinks = computed(() => {
         :updated_at="record.updated_at" @edit="emit('openEditLinkModal', record)" />
     </div>
   </div>
+  <DashboardLoadMore />
   <DashboardNoLinksMatchingCriteria v-if="!filteredLinks.length" class="mt-9 md:mt-2" />
 </template>
 
