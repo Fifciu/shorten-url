@@ -74,10 +74,6 @@ routerInstance.afterEach(closeMenu);
 </template>
 
 <style lang="scss">
-.layout {
-  margin-top: 44px;
-}
-
 .header__logo,
 .mobile-menu__logo {
   width: 89.98px;
@@ -168,10 +164,6 @@ routerInstance.afterEach(closeMenu);
   .header__hamburger {
     // todo: more mobile class name
     display: none;
-  }
-
-  .layout {
-    margin-top: 32px;
   }
 
   .header {

@@ -111,10 +111,6 @@ const onClickLogout = async () => {
   display: none;
 }
 
-.layout {
-  margin-top: 44px;
-}
-
 .header__logo,
 .mobile-menu__logo {
   width: 89.98px;
@@ -259,10 +255,6 @@ const onClickLogout = async () => {
   .header__search {
     // todo: more mobile class name
     display: none;
-  }
-
-  .layout {
-    margin-top: 32px;
   }
 
   .header {

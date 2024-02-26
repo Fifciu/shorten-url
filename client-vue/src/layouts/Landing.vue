@@ -4,11 +4,13 @@ import LandingFooter from '@/components/Landing/LandingFooter.vue';
 </script>
 
 <template>
-  <main class="layout">
+  <div class="min-h-screen flex flex-col">
+    <main class="flex-1 mt-5 lg:mt-4">
     <LandingHeader class="header" />
     <slot></slot>
   </main>
   <LandingFooter />
+  </div>
 </template>
 
 <style lang="scss" scoped>

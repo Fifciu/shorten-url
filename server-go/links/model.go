@@ -2,6 +2,7 @@ package links
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math"
@@ -27,6 +28,18 @@ type Link struct {
 	OriginalUrl string    `json:"original_url" validate:"required"`
 	UpdatedAt   time.Time `json:"updated_at" validate:"required"`
 	Alias       string    `json:"alias" validate:""` // TODO: add better validation
+}
+
+func (l *Link) MarshalJSON() ([]byte, error) {
+	type Alias Link
+	time := fmt.Sprintf("%02d-%02d-%d %02d:%02d", l.UpdatedAt.Day(), l.UpdatedAt.Month(), l.UpdatedAt.Year(), l.UpdatedAt.Hour(), l.UpdatedAt.Minute())
+	return json.Marshal(&struct {
+		*Alias
+		UpdatedAt string `json:"updated_at"`
+	}{
+		Alias:     (*Alias)(l),
+		UpdatedAt: time,
+	})
 }
 
 type PaginatedLinks struct {

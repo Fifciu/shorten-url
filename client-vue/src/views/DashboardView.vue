@@ -21,7 +21,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <main class="layout">
+  <main class="mt-5 lg:mt-6">
     <DashboardCTA :title="`Welcome ${user!.fullname}!`" description="Shorten to your heart's content! Unlimited. "
       class="mb-10" />
     <DashboardDatatable v-if="links?.length" @openAddLinkModal="isAddLinkOpen = true" @openEditLinkModal="editLinkData = $event" />

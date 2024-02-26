@@ -54,10 +54,10 @@ function toggle() {
       <div class="item-label">Updated at</div>
       <div class="item-value">{{ props.updated_at }}</div>
       <div class="item-label">Actions</div>
-      <div class="item-actions">
+      <div class="item-actions flex gap-x-4">
         <CopyButton :toCopy="REDIRECT_BASE_URL + props.short_link" />
-        <EditButton class="mx-2" @click="emit('edit')" />
-        <BinButton class="mr-2" :linkId="props.id" />
+        <EditButton @click="emit('edit')" />
+        <BinButton :linkId="props.id" />
         <WishlistButton :linkId="props.id" />
       </div>
     </div>

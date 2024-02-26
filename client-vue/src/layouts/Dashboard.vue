@@ -3,7 +3,7 @@ import DashboardHeader from '@/components/Dashboard/DashboardHeader.vue';
 </script>
 
 <template>
-  <main class="layout">
+  <main class="mt-5 lg:mt-4">
     <DashboardHeader class="header" />
     <slot></slot>
   </main>

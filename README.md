@@ -28,32 +28,43 @@ v0.0.2:
 
 v0.0.3:
 
-- [ ] refactor (tidy auth/user controllers)
-- [ ] fix controller tests
 - [x] create TS Client
 - [x] Bug: Fix sorting by ASCII code to alphabetical sort (collation)
-- [ ] write e2e tests in ts client
-- [ ] create client project
+- [x] create client project
 - [x] sign up
 - [x] sign in
-- [ ] sign out
+- [x] sign out
 - [x] user can shorten URL
 - [x] user can shorten URL with custom alias
-- [ ] user can shorten an URL with custom expiry date, lower or equal 5 years,
 - [x] user can list his links
 - [x] user can remove his links
 - [x] user can update his links
 
+v0.0.4:
+
+- [ ] user can update email
+- [ ] user can update password
+- [x] adjust date format in links' updated_at field
+
 Backlog:
 
-- [ ] URLs expire after 5 years (I still need to specify how will it look like, I mean - expiration process),
 - [ ] Counting views
 - [ ] add linter (go)
 - [ ] add db migrations on launch
 - [ ] Wishlist
 - [ ] SSO
-- [ ] Bugfix: Just added link is wrongly sorted by date
+- [x] Bugfix: Just added link is wrongly sorted by date
 - [ ] Bugfix: Width of no links yet is different than table of links
 - [ ] Bugfix: Use scoped styles in layouts' headers
-- [ ] Refactor: Map font size to rem
-- [ ] a11y: Focus trap for modals
+- [ ] Frontend : Map font size to rem
+- [ ] Frontend: new breakpoints
+- [ ] Frontend: prepare tailwind config
+- [ ] Frontend: migrate to tailwind
+- [ ] Frontend a11y: Focus trap for modals
+- [ ] write E2E tests
+- [ ] Backend: Refactor (tidy auth/user controllers)
+- [ ] Backend: Improve logging
+- [ ] Backend: Improve error responses
+- [ ] Backend: Add swagger
+- [ ] Frontend: Add loaders
+- [ ] Frontend: Icons in link buttons should be at least 18px wide
