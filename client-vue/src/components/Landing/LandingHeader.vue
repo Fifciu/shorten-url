@@ -11,7 +11,7 @@ routerInstance.afterEach(closeMenu);
 </script>
 
 <template>
-    <header class="header">
+    <header class="flex items-center justify-between px-2 lg:px-17">
       <div class="header__left">
         <router-link to="/"><img src="@/assets/logo.svg" alt="Short logo" class="header__logo" /></router-link>
         <ul class="desktop-menu__list">
@@ -77,13 +77,6 @@ routerInstance.afterEach(closeMenu);
 .header__logo,
 .mobile-menu__logo {
   width: 89.98px;
-}
-
-.header {
-  padding: 0px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .desktop-menu__list,
@@ -166,12 +159,8 @@ routerInstance.afterEach(closeMenu);
     display: none;
   }
 
-  .header {
-    padding: 0px 138px;
-
-    &__left {
-      display: flex;
-    }
+  .header__left {
+    display: flex;
   }
 
   .desktop-menu__list {

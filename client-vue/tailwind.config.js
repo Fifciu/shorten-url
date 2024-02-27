@@ -17,24 +17,23 @@ export default {
       'lg': `${1100 / 16}rem`,
       'xl': `${1500 / 16}rem`,
     },
-    extend: {
-      colors: {
-        blue: {
-          50: '#F4F6FA',
-          500: '#0043C3'
-        },
-        orange: '#EB5D27',
-        gray: {
-          50: '#F5F5F5',
-          100: '#F2F0F0',
-          200: '#C7C4C4',
-          400: '#8F8B8B',
-          500: '#5A5757',
-          750: '#1C1C1C',
-        },
-        white: '#FFF'
-      }
-    },
+    colors: {
+      blue: {
+        50: '#F4F6FA',
+        500: '#0043C3'
+      },
+      orange: '#EB5D27',
+      gray: {
+        50: '#F5F5F5',
+        100: '#F2F0F0',
+        200: '#C7C4C4',
+        400: '#8F8B8B',
+        500: '#5A5757',
+        750: '#1C1C1C',
+      },
+      white: '#FFF'
+    }
+    // extend: {},
   },
   plugins: [],
 }
