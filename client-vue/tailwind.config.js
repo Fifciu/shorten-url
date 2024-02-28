@@ -31,7 +31,15 @@ export default {
         500: '#5A5757',
         750: '#1C1C1C',
       },
-      white: '#FFF'
+      white: '#FFF',
+      red: '#EA2A2A',
+      yellow: '#FFC93E',
+      green: '#23B920',
+    },
+    fontFamily: {
+      primary: ['Merriweather'],
+      secondary: ['Source Sans Pro'],
+      ternary: ['Inter'],
     }
     // extend: {},
   },
