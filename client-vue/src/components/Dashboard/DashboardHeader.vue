@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import BaseButton from '@/components/Base/BaseButton.vue';
 import BaseSearchMobile from '@/components/Base/BaseSearchMobile.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useLinksStore } from '@/stores/links';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 import routerInstance from '@/router';
+import { useUiStore } from '@/stores/ui';
 
 const showedMobileMenu = ref(false);
 const showedDesktopSubmenu = ref(false);
 const showedMobileSearchBar = ref(false);
 const linkStore = useLinksStore();
 const { user, logout } = useUserStore();
+const uiStore = useUiStore();
 const router = useRouter();
 
 const closeMenu = () => {
@@ -24,6 +26,10 @@ const onClickLogout = async () => {
   await logout();
   router.push('/');
 }
+
+watch(showedMobileMenu, (val) => {
+  uiStore.setBodyScroll(val);
+});
 </script>
 
 <template>
@@ -142,7 +148,7 @@ const onClickLogout = async () => {
     position: absolute;
     left: 0;
     top: 0;
-    padding: 44px 16px 32px;
+    padding: 40px 16px 32px;
 
     display: flex;
     flex-direction: column;

@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import BaseButton from '@/components/Base/BaseButton.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import routerInstance from '@/router';
+import { useUiStore } from '@/stores/ui';
 
 const showedMobileMenu = ref(false);
+const uiStore = useUiStore();
 const closeMenu = () => {
   showedMobileMenu.value = false;
 }
 routerInstance.afterEach(closeMenu);
+
+watch(showedMobileMenu, (val) => {
+  uiStore.setBodyScroll(val);
+});
 </script>
 
 <template>
@@ -93,7 +99,7 @@ routerInstance.afterEach(closeMenu);
     position: absolute;
     left: 0;
     top: 0;
-    padding: 44px 16px 32px;
+    padding: 40px 16px 32px;
 
     display: flex;
     flex-direction: column;

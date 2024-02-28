@@ -1,10 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { shallowRef, provide, reactive } from 'vue';
+import { shallowRef, provide, reactive, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import router from './router';
 import * as layouts from '@/layouts';
 import Cookie from 'js-cookie';
 import { useUserStore } from '@/stores/user';
+import { useUiStore } from '@/stores/ui';
 
 const formData = reactive({
   email: '',
@@ -14,7 +16,14 @@ const formData = reactive({
 //TODO: Token expired handling
 
 const userStore = useUserStore();
+const uiStore = useUiStore();
+const { isBodyScrollLocked } = storeToRefs(uiStore);
 const layout = shallowRef('div');
+const wrapperClasses = computed(() => {
+  return isBodyScrollLocked.value 
+    ? 'h-screen overflow-hidden'
+    : ''
+})
 
 router.afterEach((to) => {
   layout.value = layouts[to.meta.layout] || 'div';
@@ -36,7 +45,7 @@ provide('app:layout', layout);
 </script>
 
 <template>
-  <component :is="layout || 'div'">
+  <component :is="layout || 'div'" :class="wrapperClasses">
     <RouterView></RouterView>
   </component>
 </template>

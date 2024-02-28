@@ -46,7 +46,7 @@ v0.0.4:
 - [ ] user can update password
 - [x] adjust date format in links' updated_at field
 - [ ] refactor basebutton to tailwind
-- [ ] make it possible to use inline for link in base button
+- [x] disable scroll when hamburger opened
 
 Backlog:
 

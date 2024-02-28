@@ -41,7 +41,7 @@ const steps = [
   <section class="px-2 py-6">
     <h2 class="text-center text-2xl mb-2 font-medium uppercase">Shortening and editing links has never been easier</h2>
     <p class="text-center font-medium mb-5 text-gray-400 text-xl">- discover the possibilities with your own account today!</p>
-    <BaseButton variant="primary" to="/sign-up" roundy class="inline">Start for Free</BaseButton>
+    <BaseButton variant="primary" to="/sign-up" roundy class="w-fit mx-auto">Start for Free</BaseButton>
   </section>
 </template>
 
