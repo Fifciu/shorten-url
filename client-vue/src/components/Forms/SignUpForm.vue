@@ -10,18 +10,22 @@ import BaseRulesList from '@/components/Base/BaseRulesList.vue';
 import type { ListElement } from '@/components/Base/BaseRulesList.vue';
 import BaseAlternativeLink from '@/components/Base/BaseAlternativeLink.vue';
 import { useUserStore } from '@/stores/user';
-import { useForm, useSetFieldError, useIsFieldTouched } from 'vee-validate';
+import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
-import { isUpperCase, isLowerCase, API_ERRORS, ERROR_MESSAGES, ERR_EMAIL_EXISTS } from '@/utils';
+import { isUpperCase, ERROR_MESSAGES, ERR_EMAIL_EXISTS } from '@/utils';
 
+const ERR_MSG_EMAIL_ALREADY_USED = ERROR_MESSAGES[ERR_EMAIL_EXISTS];
+const ERR_MSG_EMAIL_TOO_SHORT = 'Email must be at least 1 character long';
 const ERR_MSG_FULL_NAME_TOO_SHORT = 'Full name must be at least 2 characters long';
-const ERR_MSG_PASSWORD_TOO_SHORT = 'Must be at least 8 characters long';
-const ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_NUMBER = 'Must contain at least 1 number';
-const ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_UPPERCASE_LETTER = 'Must contain at least 1 uppercase letter';
+const ERR_MSG_PASSWORD_TOO_SHORT = 'Password must be at least 8 characters long';
+const ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_NUMBER = 'Password must contain at least 1 number';
+const ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_UPPERCASE_LETTER = 'Password must contain at least 1 uppercase letter';
 const schema = toTypedSchema(
   z.object({
-    email: z.string().min(1).email(),
+    email: z.string().min(1, ERR_MSG_EMAIL_TOO_SHORT).email().refine(val => !existingEmails.includes(val + ''), {
+      message: ERR_MSG_EMAIL_ALREADY_USED
+    }),
     fullname: z.string().min(2, ERR_MSG_FULL_NAME_TOO_SHORT),
     password: z.string().min(8, ERR_MSG_PASSWORD_TOO_SHORT)
       .refine(val => val.split('').filter(sign => !isNaN(sign as any)).length > 0, {
@@ -33,7 +37,7 @@ const schema = toTypedSchema(
   })
 );
 
-const { errors, values, meta, defineField, handleSubmit, setFieldError, setErrors, errorBag } = useForm({
+const { errors, meta, defineField, handleSubmit, setFieldError, errorBag } = useForm({
   validationSchema: schema,
 });
 
@@ -58,7 +62,7 @@ const onSubmit = handleSubmit(async formData => {
 
   if (result.error === ERR_EMAIL_EXISTS) {
     existingEmails.push(formData.email);
-    return setFieldError('email', ERROR_MESSAGES[ERR_EMAIL_EXISTS]);
+    return setFieldError('email', ERR_MSG_EMAIL_ALREADY_USED);
   }
   receivedServerError.value = true;
 })
@@ -93,7 +97,7 @@ const readableErrors = computed(() => {
   if (!errMessages.length) {
     return
   }
-  return errMessages.join(' ');
+  return errMessages.join('. ') + '.';
 });
 </script>
 
@@ -105,7 +109,7 @@ const readableErrors = computed(() => {
     </h2> -->
     <div class="relative mt-9 mb-6">
       <h2 class="text-blue-500 text-center text-2xl leading-9 font-ternary font-semibold">Create Account</h2>
-      <BaseTooltipBox class="mx-2" v-show="readableErrors">
+      <BaseTooltipBox class="mx-2 absolute top-0 w-[calc(100%-32px)]" v-show="readableErrors">
         {{ readableErrors }}
       </BaseTooltipBox>
     </div>
