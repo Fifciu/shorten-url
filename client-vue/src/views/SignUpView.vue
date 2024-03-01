@@ -11,7 +11,8 @@ import BaseButton from '@/components/Base/BaseButton.vue';
         title="Shorten, Share, Control"
         description="Maximum Functionality in Short Links - See How Easy You Can Shorten URLs!"
       /> -->
-    <SignUpForm />
+      <img src="@/assets/mobile-path.svg" class="absolute -top-4 pointer-events-none" />
+    <SignUpForm /> 
   </div>
 </template>
 
