@@ -11,7 +11,7 @@ export default {
   content: [],
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    spacing: buildValuesForUnit(8, 'px', 30),
+    spacing: buildValuesForUnit(8, 'px', 70),
     screens: {
       'md': `${550 / 16}rem`,
       'lg': `${1100 / 16}rem`,

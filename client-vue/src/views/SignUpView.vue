@@ -7,12 +7,11 @@ import BaseButton from '@/components/Base/BaseButton.vue';
 
 <template>
   <div class="contet">
-    <!-- <LandingCTA 
-        title="Shorten, Share, Control"
-        description="Maximum Functionality in Short Links - See How Easy You Can Shorten URLs!"
-      /> -->
-      <img src="@/assets/mobile-path.svg" class="absolute -top-4 pointer-events-none" />
-    <SignUpForm /> 
+    <LandingCTA title="Shorten, Share, Control"
+      description="Maximum Functionality in Short Links - See How Easy You Can Shorten URLs!"
+      class="lg:pl-0 xl:pl-17 lg:ml-17" />
+    <img src="@/assets/mobile-path.svg" class="absolute -top-4 pointer-events-none lg:hidden" />
+    <SignUpForm />
   </div>
 </template>
 
@@ -29,7 +28,6 @@ import BaseButton from '@/components/Base/BaseButton.vue';
 @media only screen and (min-width: $widthDesktop) {
   .cta {
     display: inline-block;
-    padding-left: 138px;
     margin-top: 48px;
   }
 }

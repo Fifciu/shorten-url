@@ -102,18 +102,14 @@ const readableErrors = computed(() => {
 </script>
 
 <template>
-  <div class="box">
-    <!-- <h2 class="desktop-heading">
-      One account,
-      Unlimited Possibilities!
-    </h2> -->
-    <div class="relative mt-9 mb-6">
+  <div class="box lg:max-w-[434px] px-2 lg:px-0 lg:ml-17 lg:mb-5">
+    <div class="relative mt-9 mb-6 lg:mb-4">
       <h2 class="text-blue-500 text-center text-2xl leading-9 font-ternary font-semibold">Create Account</h2>
       <BaseTooltipBox class="mx-2 absolute top-0 w-[calc(100%-32px)]" v-show="readableErrors">
         {{ readableErrors }}
       </BaseTooltipBox>
     </div>
-    <form class="sign-up" @submit.prevent="onSubmit">
+    <form @submit.prevent="onSubmit">
       <BaseInput uniqueId="sign-up-email" type="email" label="Email" placeholder="example@example.com" validator="email"
         class="mb-2" required v-model.trim="email" v-bind="emailAttrs" :isError="Boolean(errors.email) || tryingToUseExistingEmailAfterError"/>
       <BaseInput uniqueId="sign-up-fullname" type="text" label="Full name" placeholder="John Doe" class="mb-2" minlength="3"

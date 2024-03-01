@@ -1,16 +1,18 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, useSlots } from 'vue';
 
 const props = defineProps({
   title: String,
   description: String
 });
+
+const slots = useSlots();
 </script>
 
 <template>
   <div class="cta">
     <h2 class="cta__title">{{ props.title }}</h2>
-    <div class="cta__description" v-html="props.description"></div>
+    <div class="cta__description" :class="[slots.default && 'cta__description-before-btn']" v-html="props.description"></div>
     <div class="cta__btn-wrapper">
       <slot></slot>
     </div>
@@ -38,7 +40,11 @@ const props = defineProps({
     font-style: normal;
     font-weight: 400;
     line-height: 150%;
-    margin: 0 auto 40px;
+    margin: 0 auto 0px;
+
+    &-before-btn {
+      margin: 0 auto 40px;
+    }
   }
 
   &__btn-wrapper {
