@@ -47,7 +47,7 @@ watch(showedMobileMenu, (val) => {
       </div>
     </header>
 
-    <div class="mobile-menu-box" v-show="showedMobileMenu">
+    <div class="mobile-menu-box z-10" v-show="showedMobileMenu">
       <div class="mobile-menu__top-wrapper">
         <div class="mobile-menu__heading">
           <img src="@/assets/logo.svg" alt="Short logo" class="mobile-menu__logo" />

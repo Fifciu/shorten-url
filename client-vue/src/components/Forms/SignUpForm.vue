@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import BaseButton from '@/components/Base/BaseButton.vue';
 import BaseInput from '@/components/Base/BaseInput.vue';
@@ -10,50 +10,72 @@ import BaseRulesList from '@/components/Base/BaseRulesList.vue';
 import type { ListElement } from '@/components/Base/BaseRulesList.vue';
 import BaseAlternativeLink from '@/components/Base/BaseAlternativeLink.vue';
 import { useUserStore } from '@/stores/user';
+import { useForm, useSetFieldError, useIsFieldTouched } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import { z } from 'zod';
+import { isUpperCase, isLowerCase, API_ERRORS, ERROR_MESSAGES, ERR_EMAIL_EXISTS } from '@/utils';
 
-const formData = reactive({
-  email: '',
-  fullname: '',
-  password: ''
+const ERR_MSG_FULL_NAME_TOO_SHORT = 'Full name must be at least 2 characters long';
+const ERR_MSG_PASSWORD_TOO_SHORT = 'Must be at least 8 characters long';
+const ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_NUMBER = 'Must contain at least 1 number';
+const ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_UPPERCASE_LETTER = 'Must contain at least 1 uppercase letter';
+const schema = toTypedSchema(
+  z.object({
+    email: z.string().min(1).email(),
+    fullname: z.string().min(2, ERR_MSG_FULL_NAME_TOO_SHORT),
+    password: z.string().min(8, ERR_MSG_PASSWORD_TOO_SHORT)
+      .refine(val => val.split('').filter(sign => !isNaN(sign as any)).length > 0, {
+        message: ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_NUMBER,
+      })
+      .refine(val => val.split('').filter(isUpperCase).length > 0, {
+        message: ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_UPPERCASE_LETTER,
+      }),
+  })
+);
+
+const { errors, values, meta, defineField, handleSubmit, setFieldError, setErrors, errorBag } = useForm({
+  validationSchema: schema,
 });
 
-// values should be always trimmed
-const validation = computed(() => {
-  return {
-    email: formData.email.includes('@') || 'Provide proper email',
-    fullname: formData.fullname.includes(' ') || 'Provide proper full name',
-    password: {
-      uppercase: /[A-Z]+/.test(formData.password),
-      number: /[0-9]+/.test(formData.password) || 'At least 1 number',
-      length: formData.password.length >= 8 || 'At least 8 characters'
-    }
-  }
-})
+const [email, emailAttrs] = defineField('email');
+const [fullname, fullnameAttrs] = defineField('fullname');
+const [password, passwordAttrs] = defineField('password');
+const receivedServerError = ref(false);
+
+const existingEmails = reactive<string[]>([]);
+// If user still tries to use already existing email even though error message 
+// informing it already exists has been showed
+const tryingToUseExistingEmailAfterError = computed(() => existingEmails.includes(email.value + ''));
+
 const router = useRouter();
 const { register } = useUserStore();
 
-const onSubmit = async (event: any) => {
-  try {
-    await register(formData.fullname, formData.email, formData.password);
-    router.push('/dashboard');
-  } catch (err) {
-    console.error(err);
+const onSubmit = handleSubmit(async formData => {
+  const result = await register(formData.fullname, formData.email, formData.password);
+  if (result === true) {
+    return router.push('/dashboard');
   }
-};
+
+  if (result.error === ERR_EMAIL_EXISTS) {
+    existingEmails.push(formData.email);
+    return setFieldError('email', ERROR_MESSAGES[ERR_EMAIL_EXISTS]);
+  }
+  receivedServerError.value = true;
+})
 
 const rulesList = computed<ListElement[]>(() => {
   return [
     {
       description: 'At least 1 uppercase',
-      status: validation.value.password.uppercase === true,
+      status: Boolean(password.value?.length && password.value?.length > 7 && !errorBag.value.password?.includes(ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_UPPERCASE_LETTER))
     },
     {
       description: 'At least 1 number',
-      status: validation.value.password.number === true,
+      status: Boolean(password.value?.length && password.value?.length > 7 && !errorBag.value.password?.includes(ERR_MSG_PASSWORD_MUST_CONTAIN_AT_LEAST_1_NUMBER))
     },
     {
       description: 'At least 8 characters',
-      status: validation.value.password.length === true,
+      status: Boolean(password.value?.length && password.value?.length > 7 && !errorBag.value.password?.includes(ERR_MSG_PASSWORD_TOO_SHORT))
     }
   ]
 });
@@ -65,6 +87,14 @@ const passwordLevel = computed(() => {
     return total
   }, 0)
 })
+
+const readableErrors = computed(() => {
+  const errMessages = Object.values(errors.value);
+  if (!errMessages.length) {
+    return
+  }
+  return errMessages.join(' ');
+});
 </script>
 
 <template>
@@ -75,21 +105,20 @@ const passwordLevel = computed(() => {
     </h2> -->
     <div class="relative mt-9 mb-6">
       <h2 class="text-blue-500 text-center text-2xl leading-9 font-ternary font-semibold">Create Account</h2>
-      <!-- <BaseTooltipBox class="mx-2">
-        Oops! Something went wrong!<br>
-Make sure your login and password are correct.
-      </BaseTooltipBox> -->
+      <BaseTooltipBox class="mx-2" v-show="readableErrors">
+        {{ readableErrors }}
+      </BaseTooltipBox>
     </div>
     <form class="sign-up" @submit.prevent="onSubmit">
       <BaseInput uniqueId="sign-up-email" type="email" label="Email" placeholder="example@example.com" validator="email"
-        class="mb-2" required v-model.trim="formData.email" />
+        class="mb-2" required v-model.trim="email" v-bind="emailAttrs" :isError="Boolean(errors.email) || tryingToUseExistingEmailAfterError"/>
       <BaseInput uniqueId="sign-up-fullname" type="text" label="Full name" placeholder="John Doe" class="mb-2" minlength="3"
-        required v-model.trim="formData.fullname" />
+        required v-model="fullname" v-bind="fullnameAttrs" :isError="Boolean(errors.fullname)"/>
       <BasePassword uniqueId="sign-up-password" label="Password" placeholder="Password" minlength="8" required
-        v-model.trim="formData.password" />
+        v-model.trim="password" v-bind="passwordAttrs" :isError="Boolean(errors.password)"/>
       <BasePasswordIndicator :level="passwordLevel" class="mb-3 mt-1" />
       <BaseRulesList title="Weak password. It must contain:" :list="rulesList" class="mb-2"/>
-      <BaseButton variant="primary" class="submit-btn mb-2" shadow>Sign up</BaseButton>
+      <BaseButton variant="primary" class="submit-btn mb-2" shadow :disabled="!meta.valid || tryingToUseExistingEmailAfterError">Sign up</BaseButton>
       <BaseAlternativeLink question="Already have an account?" link="/sign-in" linkedText="Sign in" class="mb-2" />
     </form>
   </div>

@@ -48,7 +48,11 @@ func Register(validate *validator.Validate, model UserModel) http.HandlerFunc {
 		user, err := model.CreateUser(body)
 		if err != nil {
 			log.Error(fmt.Sprintf("controller/authentication/Register/creating user: %s", err.Error()))
-			utils.JsonErrorResponse(w, http.StatusInternalServerError, err.Error())
+			if err.Error() == http.StatusText(http.StatusConflict) {
+				utils.JsonErrorResponse(w, http.StatusConflict, err.Error())
+			} else {
+				utils.JsonErrorResponse(w, http.StatusInternalServerError, err.Error())
+			}
 
 			return
 		}

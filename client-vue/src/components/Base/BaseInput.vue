@@ -22,13 +22,14 @@ const props = defineProps({
       return ['blue', 'black', 'dark-grey'].includes(val);
     }
   },
+  isError: Boolean,
   modelValue: String
 });
 </script>
 
 <template>
   <div class="input-wrapper">
-    <label v-if="props.label" :class="['input-label', props.labelStyle === 'black' && 'input-label--black', props.labelStyle === 'dark-grey' && 'input-label--dark-grey']" :for="props.uniqueId">{{ label }}</label>
+    <label v-if="props.label" :class="['input-label', props.labelStyle === 'black' && 'input-label--black', props.labelStyle === 'dark-grey' && 'input-label--dark-grey', props.isError && 'input-label--error']" :for="props.uniqueId">{{ label }}</label>
     <input class="input" :id="props.uniqueId" :placeholder="props.placeholder" :value="props.modelValue" @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
   </div>
 </template>
@@ -73,5 +74,9 @@ const props = defineProps({
       display: flex;
       flex-wrap: wrap;
     }
+  }
+
+  .input-label--error + .input {
+    border-color: #EA2A2A;
   }
 </style>

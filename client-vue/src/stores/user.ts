@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { authenticationService } from '@/services/authentication';
 import Cookie from 'js-cookie';
+import { FetchError } from '@/utils';
 
 export const useUserStore = defineStore('user', () => {
   const sessionToken = ref('');
@@ -16,9 +17,22 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function register(fullname: string, email: string, password: string) {
-    await authenticationService.register(fullname, email, password);
-    const sessionToken = Cookie.get('session-token');
-    setSessionToken(sessionToken);
+    try {
+      await authenticationService.register(fullname, email, password);
+      const sessionToken = Cookie.get('session-token');
+      setSessionToken(sessionToken);
+      return true;
+    } catch (err) {
+      if ((err as FetchError).status === 409) {
+        return {
+          error: 'EMAIL_EXISTS'
+        }
+      } else {
+        return {
+          error: 'SERVER_ERROR'
+        }
+      }
+    }
   }
 
   async function logout() {

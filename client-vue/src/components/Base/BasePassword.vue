@@ -15,7 +15,8 @@ const props = defineProps({
     type: String,
     required: false
   },
-  modelValue: String
+  modelValue: String,
+  isError: Boolean
 });
 
 const isPasswordVisible = ref(false);
@@ -24,7 +25,7 @@ const isPasswordVisible = ref(false);
 <template>
   <div class="input-wrapper">
     <label v-if="props.label" class="input-label" :for="props.uniqueId">{{ label }}</label>
-    <div class="input-subwrapper">
+    <div class="input-subwrapper" :class="[props.isError && 'input-subwrapper--error']">
       <input :type="isPasswordVisible ? 'text' : 'password'" class="input" :id="props.uniqueId" :placeholder="props.placeholder" :value="props.modelValue"
       @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
       <button type="button" class="btn-toggle-password" @click="isPasswordVisible = !isPasswordVisible"><img src="@/assets/show-password.svg" v-show="!isPasswordVisible" /><img src="@/assets/hide-password.svg" v-show="isPasswordVisible" /></button>
@@ -81,5 +82,11 @@ const isPasswordVisible = ref(false);
   border-bottom-left-radius: 0;
   border-left-width: 0;
   cursor: pointer;
+}
+
+.input-subwrapper--error {
+  .input, .btn-toggle-password {
+    border-color: #EA2A2A;
+  }
 }
 </style>
