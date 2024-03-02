@@ -16,7 +16,7 @@ export const authenticationService = {
   },
 
   async login(email: string, password: string) {
-    await sendToApi(`${MODULE_BASE_PATH}/login`, {
+    return sendToApi(`${MODULE_BASE_PATH}/login`, {
       method: 'POST',
       credentials: 'same-origin',
       body: JSON.stringify({

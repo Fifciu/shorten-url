@@ -8,6 +8,8 @@ const route = useRoute();
 const perRouteClasses = computed(() => {
   if (route.name === 'sign-up') {
     return 'sign-up-background'
+  } else if (route.name === 'sign-in') {
+    return 'sign-in-background'
   }
   return ''
 })
@@ -25,12 +27,6 @@ const perRouteClasses = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.cta {
-  margin-top: 100px;
-  padding: 0 16px;
-  overflow: hidden;
-}
-
 .header {
   position: relative;
   z-index: 2;
@@ -41,26 +37,8 @@ const perRouteClasses = computed(() => {
     background: url('@/assets/sign-up-man.png') right no-repeat, url('@/assets/zygzag-2.svg') bottom 60% right 20% no-repeat;
   }
 
-  .desktop-zygzag-img {
-    display: block;
-    position: absolute;
-    z-index: -1;
-    right: 400px;
-    top: 0;
-  }
-
-  .desktop-man-img {
-    display: block;
-    position: absolute;
-    z-index: -1;
-    right: 0;
-    top: 0;
-  }
-
-  .cta {
-    display: inline-block;
-    padding-left: 138px;
-    margin-top: 175px;
+  .sign-in-background {
+    background: url('@/assets/sign-in-man.png') left no-repeat;
   }
 }
 </style>

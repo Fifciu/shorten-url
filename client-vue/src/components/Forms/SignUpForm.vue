@@ -9,6 +9,7 @@ import BaseTooltipBox from '@/components/Base/BaseTooltipBox.vue';
 import BaseRulesList from '@/components/Base/BaseRulesList.vue';
 import type { ListElement } from '@/components/Base/BaseRulesList.vue';
 import BaseAlternativeLink from '@/components/Base/BaseAlternativeLink.vue';
+import BaseSingleSignOn from '@/components/Base/BaseSingleSignOn.vue';
 import { useUserStore } from '@/stores/user';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
@@ -102,7 +103,7 @@ const readableErrors = computed(() => {
 </script>
 
 <template>
-  <div class="box lg:max-w-[434px] px-2 lg:px-0 lg:ml-17 lg:mb-5">
+  <div class="px-2 md:max-w-[700px] md:mx-auto lg:max-w-[434px] lg:px-0 lg:ml-17 lg:mb-5">
     <div class="relative mt-9 mb-6 lg:mb-4">
       <h2 class="text-blue-500 text-center text-2xl leading-9 font-ternary font-semibold">Create Account</h2>
       <BaseTooltipBox class="mx-2 absolute top-0 w-[calc(100%-32px)]" v-show="readableErrors">
@@ -121,6 +122,7 @@ const readableErrors = computed(() => {
       <BaseButton variant="primary" class="submit-btn mb-2" shadow :disabled="!meta.valid || tryingToUseExistingEmailAfterError">Sign up</BaseButton>
       <BaseAlternativeLink question="Already have an account?" link="/sign-in" linkedText="Sign in" class="mb-2" />
     </form>
+    <BaseSingleSignOn class="my-4"/>
   </div>
 </template>
 

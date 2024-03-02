@@ -87,8 +87,8 @@ func Login(validate *validator.Validate, model UserModel) http.HandlerFunc {
 
 		user, err := model.GetUserByEmail(body.Email)
 		if err != nil {
-			log.Error(fmt.Sprintf("controller/authentication/Login/generating token: %s", err.Error()))
-			utils.JsonErrorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			log.Error(fmt.Sprintf("controller/authentication/Login/Failed to fetch email, returning 401 for safety: %s", err.Error()))
+			utils.JsonErrorResponse(w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
 			return
 		}
 

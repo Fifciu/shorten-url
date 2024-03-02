@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { authenticationService } from '@/services/authentication';
 import Cookie from 'js-cookie';
 import { FetchError } from '@/utils';
+import { ERR_WRONG_EMAIL_OR_PASSWORD, ERR_EMAIL_EXISTS } from '@/utils';
 
 export const useUserStore = defineStore('user', () => {
   const sessionToken = ref('');
@@ -11,9 +12,22 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function login(email: string, password: string) {
-    await authenticationService.login(email, password);
-    const sessionToken = Cookie.get('session-token');
-    setSessionToken(sessionToken);
+    try {
+      await authenticationService.login(email, password);
+      const sessionToken = Cookie.get('session-token');
+      setSessionToken(sessionToken);
+      return true;
+    } catch (err) {
+      if ((err as FetchError).status === 401) {
+        return {
+          error: ERR_WRONG_EMAIL_OR_PASSWORD
+        }
+      } else {
+        return {
+          error: 'SERVER_ERROR'
+        }
+      }
+    }
   }
 
   async function register(fullname: string, email: string, password: string) {
@@ -25,7 +39,7 @@ export const useUserStore = defineStore('user', () => {
     } catch (err) {
       if ((err as FetchError).status === 409) {
         return {
-          error: 'EMAIL_EXISTS'
+          error: ERR_EMAIL_EXISTS
         }
       } else {
         return {
